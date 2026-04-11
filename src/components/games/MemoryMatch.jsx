@@ -82,33 +82,60 @@ const MemoryMatch = () => {
         {cards.map((icon, index) => {
           const isFlipped = flipped.includes(index) || solved.includes(index);
           return (
-            <motion.div
+            <div
               key={index}
-              whileHover={!isFlipped ? { scale: 1.05 } : {}}
               onClick={() => handleClick(index)}
               style={{
                 aspectRatio: '1',
-                background: solved.includes(index) ? '#4ECDC4' : (flipped.includes(index) ? 'white' : '#FF6B6B'),
-                borderRadius: '16px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '2.5rem',
-                cursor: 'pointer',
-                boxShadow: '0 6px 12px rgba(0,0,0,0.08)',
-                transition: 'background 0.3s ease',
                 perspective: '1000px',
-                transformStyle: 'preserve-3d',
-                transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0)'
+                cursor: 'pointer'
               }}
             >
-              <div style={{ 
-                transform: isFlipped ? 'rotateY(180deg)' : 'none',
-                backfaceVisibility: 'hidden'
-              }}>
-                {isFlipped ? icon : '❓'}
-              </div>
-            </motion.div>
+              <motion.div
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.6, type: 'spring', stiffness: 260, damping: 20 }}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '100%',
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                {/* Back of the card (Hidden face when not flipped) */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: '#FF6B6B',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '2.5rem',
+                  backfaceVisibility: 'hidden',
+                  boxShadow: '0 6px 12px rgba(0,0,0,0.08)',
+                  zIndex: 2
+                }}>
+                  ❓
+                </div>
+
+                {/* Front of the card (Visible face when flipped) */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: solved.includes(index) ? '#4ECDC4' : 'white',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '2.5rem',
+                  backfaceVisibility: 'hidden',
+                  transform: 'rotateY(180deg)',
+                  boxShadow: '0 6px 12px rgba(0,0,0,0.08)'
+                }}>
+                  {icon}
+                </div>
+              </motion.div>
+            </div>
           );
         })}
       </div>

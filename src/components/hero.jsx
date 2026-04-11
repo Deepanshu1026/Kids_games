@@ -11,7 +11,7 @@ import ShadowMatch from './games/ShadowMatch'
 import ColorMixer from './games/ColorMixer'
 import PetParade from './games/PetParade'
 import RocketLaunch from './games/RocketLaunch'
-import kidsVideo from '../assets/kids_video.mp4'
+import kidsVideo from '../assets/greenscreen.mp4'
 
 // ── Google Fonts ──────────────────────────────────────────────────────────────
 const FontLink = () => (
@@ -71,6 +71,77 @@ const FontLink = () => (
     }
   `}</style>
 );
+
+
+
+const ChromaKeyVideo = ({ src, style }) => {
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        let animationFrameId;
+
+        const computeFrame = () => {
+            if (!video || !canvas || video.paused || video.ended) return;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const l = frame.data.length / 4;
+
+            for (let i = 0; i < l; i++) {
+                const r = frame.data[i * 4 + 0];
+                const g = frame.data[i * 4 + 1];
+                const b = frame.data[i * 4 + 2];
+
+                // Improved Green Screen Detection
+                // Targeted for lime/bright green while protecting the cyan/yellow bunny
+                if (g > 120 && r < g * 0.7 && b < g * 0.7) {
+                    frame.data[i * 4 + 3] = 0; // Alpha = 0 (Transparent)
+                } else if (g > 90 && r < g * 0.8 && b < g * 0.8) {
+                    // Soft edge blending
+                    const alpha = Math.max(0, 255 - (g - Math.max(r, b)) * 2);
+                    frame.data[i * 4 + 3] = alpha;
+                }
+            }
+
+            ctx.putImageData(frame, 0, 0);
+            animationFrameId = requestAnimationFrame(computeFrame);
+        };
+
+        const handlePlay = () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            computeFrame();
+        };
+
+        video.addEventListener("play", handlePlay);
+        return () => {
+            video.removeEventListener("play", handlePlay);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, []);
+
+    return (
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+            <video
+                ref={videoRef}
+                src={src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{ display: "none" }} // Hide the actual video
+            />
+            <canvas
+                ref={canvasRef}
+                style={{ ...style, width: "100%", height: "100%" }}
+            />
+        </div>
+    );
+};
 
 // ── Decorative floating shapes ────────────────────────────────────────────────
 const Blob = ({ color, size, top, left, delay = 0, opacity = 0.25 }) => (
@@ -477,7 +548,7 @@ export default function App() {
                             </div>
                         </div>
 
-                        {/* Right: 3D Viewer */}
+                        {/* Right: Video Viewer */}
                         <div style={{ position: "relative", animation: "popIn 0.7s ease 0.2s both" }}>
                             <div style={{
                                 position: "absolute", inset: -20, borderRadius: 40,
@@ -486,18 +557,17 @@ export default function App() {
                             }} />
                             <div style={{
                                 position: "relative", zIndex: 1,
-                                background: "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)",
-                                borderRadius: 36, border: "3px solid rgba(255,255,255,0.9)",
+                                background: "rgba(255,255,255,0.05)", backdropFilter: "blur(10px)",
+                                borderRadius: 36, border: "2px solid rgba(255,255,255,0.4)",
                                 overflow: "hidden", height: 460,
-                                boxShadow: "0 24px 64px rgba(200,120,255,0.2)"
+                                boxShadow: "0 24px 64px rgba(200,120,255,0.05)"
                             }}>
-                                <video
+                                <ChromaKeyVideo
                                     src={kidsVideo}
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    style={{
+                                        objectFit: "contain",
+                                        transform: "scale(1.2)"
+                                    }}
                                 />
                             </div>
                             {/* floating bubbles around viewer */}
