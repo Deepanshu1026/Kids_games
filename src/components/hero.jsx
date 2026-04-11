@@ -69,7 +69,32 @@ const FontLink = () => (
       50%  { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-  `}</style>
+
+    /* ── Responsive Mobile Styles ── */
+    .nav-links { display: flex; gap: 28px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 80px 8%; width: 100%; align-items: center; }
+    .stats-row { display: flex; gap: 32px; margin-top: 40px; }
+    .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 40px 8%; }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+    .filter-chips { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+    
+    @media (max-width: 900px) {
+        .hero-grid { grid-template-columns: 1fr; padding: 40px 5%; text-align: center; gap: 24px; }
+        .hero-title { font-size: 2.8rem !important; }
+        .hero-desc { margin: 0 auto 36px auto !important; }
+        .hero-buttons { justify-content: center; }
+        .stats-row { justify-content: center; flex-wrap: wrap; text-align: center; }
+        .nav-links { display: none; } /* Hide for mobile simplicity or add a hamburger menu later */
+        .footer-content { flex-direction: column; text-align: center; gap: 24px; }
+    }
+    
+    @media (max-width: 480px) {
+        .stats-row { gap: 16px; }
+        .stats-row > div { flex: 1 1 40%; }
+        .hero-title { font-size: 2.2rem !important; }
+        .blob-bg { display: none; } /* Hide large blobs on small mobiles for cleaner look */
+    }
+    `}</style>
 );
 
 
@@ -429,7 +454,7 @@ export default function App() {
                             color: "#1A1A4E", letterSpacing: 0.5
                         }}>TinyPlay</span>
                     </div>
-                    <div style={{ display: "flex", gap: 28 }}>
+                    <div className="nav-links">
                         {["Games", "About", "Parents"].map(l => (
                             <a key={l} href="#" style={{
                                 fontFamily: "'Nunito',sans-serif", fontWeight: 700,
@@ -472,11 +497,7 @@ export default function App() {
                     <Star top="45%" left="48%" color="#FF9A3C" size="16px" delay={0.8} />
 
                     {/* Content */}
-                    <div style={{
-                        position: "relative", zIndex: 2, display: "grid",
-                        gridTemplateColumns: "1fr 1fr", gap: 48, padding: "80px 8%",
-                        width: "100%", alignItems: "center"
-                    }}>
+                    <div className="hero-grid" style={{ position: "relative", zIndex: 2 }}>
 
                         {/* Left: Text */}
                         <div style={{ animation: "popIn 0.7s ease both" }}>
@@ -492,7 +513,7 @@ export default function App() {
                                 }}>Safe & Fun for Ages 2-5</span>
                             </div>
 
-                            <h1 style={{
+                            <h1 className="hero-title" style={{
                                 fontFamily: "'Fredoka One', cursive", fontSize: "clamp(42px,6vw,78px)",
                                 lineHeight: 1.1, color: "#1A1A4E", marginBottom: 24
                             }}>
@@ -505,7 +526,7 @@ export default function App() {
                                 <span style={{ color: "#6BCFB0" }}>Grow!</span>
                             </h1>
 
-                            <p style={{
+                            <p className="hero-desc" style={{
                                 fontSize: 18, color: "#555", lineHeight: 1.8, marginBottom: 36,
                                 fontWeight: 600, maxWidth: 480
                             }}>
@@ -513,7 +534,7 @@ export default function App() {
                                 No ads, no purchases — just pure, joyful learning through play! 🎉
                             </p>
 
-                            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                            <div className="hero-buttons">
                                 <button
                                     onClick={() => openGame(GAMES[0])}
                                     style={{
@@ -538,7 +559,7 @@ export default function App() {
                                 </button>
                             </div>
 
-                            <div style={{ display: "flex", gap: 32, marginTop: 40 }}>
+                            <div className="stats-row">
                                 {[["500K+", "Happy Kids"], ["10+", "Fun Games"], ["4.9★", "App Rating"]].map(([n, l]) => (
                                     <div key={l}>
                                         <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 28, color: "#FF6B6B" }}>{n}</div>
@@ -621,10 +642,7 @@ export default function App() {
                     </div>
 
                     {/* Filter chips */}
-                    <div style={{
-                        display: "flex", gap: 12, justifyContent: "center",
-                        flexWrap: "wrap", marginBottom: 48, position: "relative", zIndex: 1
-                    }}>
+                    <div className="filter-chips" style={{ position: "relative", zIndex: 1 }}>
                         {filters.map(f => (
                             <button key={f} onClick={() => setActiveFilter(f)}
                                 style={{
@@ -692,10 +710,7 @@ export default function App() {
                 </section>
 
                 {/* ── FOOTER ── */}
-                <footer style={{
-                    background: "#1A1A4E", padding: "40px 8%",
-                    display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16
-                }}>
+                <footer className="footer-content" style={{ background: "#1A1A4E" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <span style={{ fontSize: 28 }}>🎮</span>
                         <span style={{ fontFamily: "'Fredoka One',cursive", fontSize: 22, color: "#FFD93D" }}>TinyPlay</span>
