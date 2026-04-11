@@ -1,5 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import * as THREE from "three";
+import GameModal from './GameModal'
+import MemoryMatch from './games/MemoryMatch'
+import BalloonPop from './games/BalloonPop'
+import AnimalFun from './games/AnimalFun'
+import ShapeKingdom from './games/ShapeKingdom'
+import NumberSafari from './games/NumberSafari'
+import DoodleWorld from './games/DoodleWorld'
+import MusicJungle from './games/MusicJungle'
+import ShadowMatch from './games/ShadowMatch'
+import ColorMixer from './games/ColorMixer'
+import PetParade from './games/PetParade'
+import RocketLaunch from './games/RocketLaunch'
+import kidsVideo from '../assets/kids_video.mp4'
 
 // ── Google Fonts ──────────────────────────────────────────────────────────────
 const FontLink = () => (
@@ -78,253 +90,144 @@ const Star = ({ top, left, color, size, delay = 0 }) => (
     }}>⭐</div>
 );
 
-// ── 3D Character Viewer ───────────────────────────────────────────────────────
-const CharacterViewer = () => {
-    const mountRef = useRef(null);
-    const inputRef = useRef(null);
-    const [loaded, setLoaded] = useState(false);
-    const [dragging, setDragging] = useState(false);
-    const [hint, setHint] = useState("Drop your .glb / .fbx character here");
-    const rendererRef = useRef(null);
-    const sceneRef = useRef(null);
-    const cameraRef = useRef(null);
-    const modelRef = useRef(null);
-    const frameRef = useRef(null);
-    const mixerRef = useRef(null);
-    const clockRef = useRef(new THREE.Clock());
 
-    useEffect(() => {
-        if (!mountRef.current) return;
-        const W = mountRef.current.clientWidth || 500;
-        const H = mountRef.current.clientHeight || 500;
-
-        // Scene
-        const scene = new THREE.Scene();
-        sceneRef.current = scene;
-
-        // Camera
-        const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
-        camera.position.set(0, 1.5, 4);
-        cameraRef.current = camera;
-
-        // Renderer
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(W, H);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.outputColorSpace = THREE.SRGBColorSpace;
-        mountRef.current.appendChild(renderer.domElement);
-        rendererRef.current = renderer;
-
-        // Lights
-        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-        const dir = new THREE.DirectionalLight(0xfff0e0, 2.5);
-        dir.position.set(5, 10, 7);
-        dir.castShadow = true;
-        scene.add(dir);
-        const fill = new THREE.DirectionalLight(0xe0f0ff, 1);
-        fill.position.set(-5, 2, -5);
-        scene.add(fill);
-        const rim = new THREE.PointLight(0xFFD93D, 1.5, 20);
-        rim.position.set(0, 5, -3);
-        scene.add(rim);
-
-        // Default placeholder character (cute bouncing ball)
-        const geo = new THREE.SphereGeometry(0.7, 32, 32);
-        const mat = new THREE.MeshStandardMaterial({ color: 0xFF6B6B, roughness: 0.4, metalness: 0.1 });
-        const ball = new THREE.Mesh(geo, mat);
-        ball.position.y = 0.7;
-        ball.castShadow = true;
-        scene.add(ball);
-        modelRef.current = ball;
-
-        // Ground
-        const gGeo = new THREE.CircleGeometry(2.5, 64);
-        const gMat = new THREE.MeshStandardMaterial({ color: 0xFFD93D, roughness: 1 });
-        const ground = new THREE.Mesh(gGeo, gMat);
-        ground.rotation.x = -Math.PI / 2;
-        ground.receiveShadow = true;
-        scene.add(ground);
-
-        // Eyes on ball
-        const eyeGeo = new THREE.SphereGeometry(0.1, 16, 16);
-        const eyeMat = new THREE.MeshStandardMaterial({ color: 0x1A1A4E });
-        const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
-        eyeL.position.set(-0.25, 1.1, 0.6);
-        scene.add(eyeL);
-        const eyeR = eyeL.clone();
-        eyeR.position.x = 0.25;
-        scene.add(eyeR);
-
-        let t = 0;
-        const animate = () => {
-            frameRef.current = requestAnimationFrame(animate);
-            t += 0.02;
-            if (modelRef.current === ball) {
-                ball.position.y = 0.7 + Math.sin(t) * 0.3;
-                ball.rotation.y += 0.01;
-                eyeL.position.y = 1.1 + Math.sin(t) * 0.3;
-                eyeR.position.y = 1.1 + Math.sin(t) * 0.3;
-            } else if (modelRef.current) {
-                modelRef.current.rotation.y += 0.005;
-            }
-            if (mixerRef.current) mixerRef.current.update(clockRef.current.getDelta());
-            renderer.render(scene, camera);
-        };
-        animate();
-
-        const onResize = () => {
-            if (!mountRef.current) return;
-            const w = mountRef.current.clientWidth;
-            const h = mountRef.current.clientHeight;
-            camera.aspect = w / h;
-            camera.updateProjectionMatrix();
-            renderer.setSize(w, h);
-        };
-        window.addEventListener("resize", onResize);
-
-        return () => {
-            window.removeEventListener("resize", onResize);
-            cancelAnimationFrame(frameRef.current);
-            renderer.dispose();
-            if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
-                mountRef.current.removeChild(renderer.domElement);
-            }
-        };
-    }, []);
-
-    const loadGLB = async (file) => {
-        const { GLTFLoader } = await import("https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/GLTFLoader.js");
-        const url = URL.createObjectURL(file);
-        const loader = new GLTFLoader();
-        loader.load(url, (gltf) => {
-            if (modelRef.current) sceneRef.current.remove(modelRef.current);
-            const model = gltf.scene;
-            const box = new THREE.Box3().setFromObject(model);
-            const center = box.getCenter(new THREE.Vector3());
-            const size = box.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            model.scale.setScalar(2.5 / maxDim);
-            model.position.set(-center.x * (2.5 / maxDim), -box.min.y * (2.5 / maxDim), -center.z * (2.5 / maxDim));
-            sceneRef.current.add(model);
-            modelRef.current = model;
-            cameraRef.current.position.set(0, size.y * 0.6, size.z * 2.5);
-            if (gltf.animations.length) {
-                mixerRef.current = new THREE.AnimationMixer(model);
-                mixerRef.current.clipAction(gltf.animations[0]).play();
-            }
-            setLoaded(true);
-            setHint("Character loaded! Drag to rotate.");
-            URL.revokeObjectURL(url);
-        });
-    };
-
-    const loadFBX = async (file) => {
-        const { FBXLoader } = await import("https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/FBXLoader.js");
-        const url = URL.createObjectURL(file);
-        new FBXLoader().load(url, (fbx) => {
-            if (modelRef.current) sceneRef.current.remove(modelRef.current);
-            const box = new THREE.Box3().setFromObject(fbx);
-            const size = box.getSize(new THREE.Vector3());
-            fbx.scale.setScalar(2.5 / Math.max(size.x, size.y, size.z));
-            sceneRef.current.add(fbx);
-            modelRef.current = fbx;
-            setLoaded(true);
-            setHint("Character loaded!");
-            URL.revokeObjectURL(url);
-        });
-    };
-
-    const handleFile = (file) => {
-        if (!file) return;
-        const ext = file.name.split(".").pop().toLowerCase();
-        if (ext === "glb" || ext === "gltf") loadGLB(file);
-        else if (ext === "fbx") loadFBX(file);
-        else setHint("Please drop a .glb, .gltf, or .fbx file");
-    };
-
-    // Orbit controls (simple pointer drag)
-    const pointerRef = useRef({ dragging: false, x: 0, y: 0 });
-    const onPointerDown = (e) => { pointerRef.current = { dragging: true, x: e.clientX, y: e.clientY }; };
-    const onPointerUp = () => { pointerRef.current.dragging = false; };
-    const onPointerMove = (e) => {
-        if (!pointerRef.current.dragging || !modelRef.current) return;
-        const dx = e.clientX - pointerRef.current.x;
-        const dy = e.clientY - pointerRef.current.y;
-        modelRef.current.rotation.y += dx * 0.01;
-        cameraRef.current.position.y = Math.max(0.3, cameraRef.current.position.y - dy * 0.01);
-        pointerRef.current.x = e.clientX;
-        pointerRef.current.y = e.clientY;
-    };
-
-    return (
-        <div style={{ position: "relative", width: "100%", height: "100%", cursor: "grab" }}
-            onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerMove={onPointerMove}
-            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(e) => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]); }}>
-            <div ref={mountRef} style={{ width: "100%", height: "100%" }} />
-            {/* Upload overlay */}
-            <div onClick={() => inputRef.current?.click()} style={{
-                position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)",
-                background: dragging ? "rgba(255,107,107,0.85)" : "rgba(26,26,78,0.72)",
-                backdropFilter: "blur(8px)", color: "#fff", padding: "10px 22px",
-                borderRadius: 999, fontSize: 13, fontFamily: "'Nunito',sans-serif", fontWeight: 700,
-                cursor: "pointer", whiteSpace: "nowrap", border: "2px dashed rgba(255,255,255,0.5)",
-                transition: "background 0.2s",
-            }}>
-                {dragging ? "Drop it! 🎉" : hint}
-            </div>
-            <input ref={inputRef} type="file" accept=".glb,.gltf,.fbx"
-                style={{ display: "none" }} onChange={(e) => handleFile(e.target.files[0])} />
-        </div>
-    );
-};
 
 // ── Games Data ────────────────────────────────────────────────────────────────
 const GAMES = [
     {
-        id: 1, emoji: "🎨", name: "Doodle World", age: "2-3 yrs", color: "#FF6B6B", bg: "#fff0f0",
+        id: 1,
+        name: "Doodle World",
         desc: "Tap & splash colors to paint magical creatures. Endless creative fun!",
-        tag: "Creative", players: "1 Player"
+        tag: "Creative",
+        age: "2-3 yrs",
+        players: "1 Player",
+        emoji: "🎨",
+        color: "#FF6B6B",
+        bg: "#fff0f0",
+        component: DoodleWorld
     },
     {
-        id: 2, emoji: "🔢", name: "Number Safari", age: "3-5 yrs", color: "#6BCFB0", bg: "#f0fff9",
+        id: 2,
+        name: "Number Safari",
         desc: "Count adorable animals on a jungle adventure. Learn numbers the fun way!",
-        tag: "Learning", players: "1-2 Players"
+        tag: "Learning",
+        age: "3-5 yrs",
+        players: "1-2 Players",
+        emoji: "🔢",
+        color: "#6BCFB0",
+        bg: "#f0fff9",
+        component: NumberSafari
     },
     {
-        id: 3, emoji: "🧩", name: "Shape Kingdom", age: "2-4 yrs", color: "#C77DFF", bg: "#f8f0ff",
+        id: 3,
+        name: "Shape Kingdom",
         desc: "Match shapes to build castles and unlock silly characters.",
-        tag: "Puzzle", players: "1 Player"
+        tag: "Puzzle",
+        age: "2-4 yrs",
+        players: "1 Player",
+        emoji: "🧩",
+        color: "#C77DFF",
+        bg: "#f8f0ff",
+        component: ShapeKingdom
     },
     {
-        id: 4, emoji: "🎵", name: "Music Jungle", age: "2-5 yrs", color: "#FF9A3C", bg: "#fff5ec",
+        id: 4,
+        name: "Music Jungle",
         desc: "Tap instruments, create beats, and dance with jungle friends!",
-        tag: "Music", players: "1-4 Players"
+        tag: "Music",
+        age: "2-5 yrs",
+        players: "1-4 Players",
+        emoji: "🎵",
+        color: "#FF9A3C",
+        bg: "#fff5ec",
+        component: MusicJungle
     },
     {
-        id: 5, emoji: "🌈", name: "Rainbow Race", age: "3-5 yrs", color: "#4FC3F7", bg: "#f0f9ff",
-        desc: "Slide down rainbows and collect stars in a cloud-hopping adventure.",
-        tag: "Adventure", players: "1-2 Players"
+        id: 5,
+        name: "Shadow Match",
+        desc: "Can you guess which animal belongs to each shadow? Try it now!",
+        tag: "Mind",
+        age: "3-5 yrs",
+        players: "1 Player",
+        emoji: "👤",
+        color: "#636E72",
+        bg: "#f0f0f0",
+        component: ShadowMatch
     },
     {
-        id: 6, emoji: "🐾", name: "Pet Parade", age: "2-5 yrs", color: "#FFD93D", bg: "#fffaec",
-        desc: "Feed, groom, and play with the cutest virtual pets on the block!",
-        tag: "Care", players: "1 Player"
+        id: 6,
+        name: "Color Mixer",
+        desc: "Mix red, blue and yellow to see what magic colors you can make!",
+        tag: "Science",
+        age: "3-5 yrs",
+        players: "1 Player",
+        emoji: "🧪",
+        color: "#55E6C1",
+        bg: "#f0fff9",
+        component: ColorMixer
     },
+    {
+        id: 7,
+        name: "Pet Parade",
+        desc: "Adopt a puppy, kitten or bunny and take care of them today!",
+        tag: "Care",
+        age: "2-5 yrs",
+        players: "1 Player",
+        emoji: "🐾",
+        color: "#FF9FF3",
+        bg: "#fff0fa",
+        component: PetParade
+    },
+    {
+        id: 8,
+        name: "Rocket Launch",
+        desc: "Build up power and launch your rocket into the stars!",
+        tag: "Skill",
+        age: "4-5 yrs",
+        players: "1 Player",
+        emoji: "🚀",
+        color: "#0984E3",
+        bg: "#f0f7ff",
+        component: RocketLaunch
+    },
+    {
+        id: 9,
+        emoji: "🎈",
+        name: "Balloon Pop",
+        desc: "Pop colorful balloons to improve focus and reaction time.",
+        tag: "Skill",
+        age: "2-4 yrs",
+        players: "1 Player",
+        color: "#FF8E8E",
+        bg: "#fff0f0",
+        component: BalloonPop
+    },
+    {
+        id: 10,
+        emoji: "🧠",
+        name: "Memory Match",
+        desc: "Train your brain by finding all matching animal pairs!",
+        tag: "Mind",
+        age: "3-5 yrs",
+        players: "1-2 Players",
+        color: "#FFE66D",
+        bg: "#fffef0",
+        component: MemoryMatch
+    }
 ];
 
 const TAG_COLORS = {
     Creative: "#FF6B6B", Learning: "#6BCFB0", Puzzle: "#C77DFF",
     Music: "#FF9A3C", Adventure: "#4FC3F7", Care: "#FFD93D",
+    Skill: "#FF8E8E", Mind: "#FFE66D", Science: "#55E6C1"
 };
 
 // ── Game Card ─────────────────────────────────────────────────────────────────
-const GameCard = ({ game, i }) => {
+const GameCard = ({ game, i, onPlay }) => {
     const [hovered, setHovered] = useState(false);
     return (
         <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+            onClick={() => onPlay(game)}
             style={{
                 background: hovered ? game.bg : "#fff",
                 border: `3px solid ${hovered ? game.color : "#f0e8ff"}`,
@@ -367,12 +270,14 @@ const GameCard = ({ game, i }) => {
                 <span style={{ fontSize: 12, color: "#999", fontFamily: "'Nunito',sans-serif" }}>
                     👥 {game.players}
                 </span>
-                <button style={{
-                    background: game.color, color: "#fff", border: "none",
-                    borderRadius: 999, padding: "8px 20px", fontFamily: "'Fredoka One',cursive",
-                    fontSize: 15, cursor: "pointer", transition: "transform 0.15s",
-                    transform: hovered ? "scale(1.08)" : "scale(1)"
-                }}>
+                <button
+                    onClick={(e) => { e.stopPropagation(); onPlay(game); }}
+                    style={{
+                        background: game.color, color: "#fff", border: "none",
+                        borderRadius: 999, padding: "8px 20px", fontFamily: "'Fredoka One',cursive",
+                        fontSize: 15, cursor: "pointer", transition: "transform 0.15s",
+                        transform: hovered ? "scale(1.08)" : "scale(1)"
+                    }}>
                     Play Now!
                 </button>
             </div>
@@ -413,8 +318,23 @@ const BADGES = [
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
     const [activeFilter, setActiveFilter] = useState("All");
-    const filters = ["All", "Creative", "Learning", "Puzzle", "Music", "Adventure", "Care"];
+    const [activeGame, setActiveGame] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const filters = ["All", "Creative", "Learning", "Puzzle", "Music", "Mind", "Care", "Skill", "Science"];
     const filtered = activeFilter === "All" ? GAMES : GAMES.filter(g => g.tag === activeFilter);
+
+    const openGame = (game) => {
+        setActiveGame(game);
+        setIsModalOpen(true);
+    };
+
+    const closeGame = () => {
+        setIsModalOpen(false);
+        setActiveGame(null);
+    };
+
+    const ActiveGameComponent = activeGame ? activeGame.component : null;
 
     return (
         <>
@@ -518,17 +438,19 @@ export default function App() {
                                 fontSize: 18, color: "#555", lineHeight: 1.8, marginBottom: 36,
                                 fontWeight: 600, maxWidth: 480
                             }}>
-                                6 magical games designed by child development experts.
+                                10+ magical games designed by child development experts.
                                 No ads, no purchases — just pure, joyful learning through play! 🎉
                             </p>
 
                             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                                <button style={{
-                                    background: "#FF6B6B", color: "#fff", border: "none",
-                                    borderRadius: 999, padding: "16px 36px", fontFamily: "'Fredoka One',cursive",
-                                    fontSize: 20, cursor: "pointer", boxShadow: "0 8px 24px #FF6B6B55",
-                                    transition: "transform 0.2s, box-shadow 0.2s"
-                                }}
+                                <button
+                                    onClick={() => openGame(GAMES[0])}
+                                    style={{
+                                        background: "#FF6B6B", color: "#fff", border: "none",
+                                        borderRadius: 999, padding: "16px 36px", fontFamily: "'Fredoka One',cursive",
+                                        fontSize: 20, cursor: "pointer", boxShadow: "0 8px 24px #FF6B6B55",
+                                        transition: "transform 0.2s, box-shadow 0.2s"
+                                    }}
                                     onMouseEnter={e => { e.target.style.transform = "scale(1.07)"; e.target.style.boxShadow = "0 12px 32px #FF6B6B77"; }}
                                     onMouseLeave={e => { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "0 8px 24px #FF6B6B55"; }}>
                                     🚀 Start Playing Free
@@ -546,7 +468,7 @@ export default function App() {
                             </div>
 
                             <div style={{ display: "flex", gap: 32, marginTop: 40 }}>
-                                {[["500K+", "Happy Kids"], ["6", "Fun Games"], ["4.9★", "App Rating"]].map(([n, l]) => (
+                                {[["500K+", "Happy Kids"], ["10+", "Fun Games"], ["4.9★", "App Rating"]].map(([n, l]) => (
                                     <div key={l}>
                                         <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 28, color: "#FF6B6B" }}>{n}</div>
                                         <div style={{ fontSize: 13, color: "#888", fontWeight: 700 }}>{l}</div>
@@ -569,7 +491,14 @@ export default function App() {
                                 overflow: "hidden", height: 460,
                                 boxShadow: "0 24px 64px rgba(200,120,255,0.2)"
                             }}>
-                                <CharacterViewer />
+                                <video
+                                    src={kidsVideo}
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                />
                             </div>
                             {/* floating bubbles around viewer */}
                             {[["🎮", "top:10px;right:10px", "#FFD93D"], ["⭐", "bottom:14px;left:10px", "#FF6B6B"],
@@ -588,7 +517,7 @@ export default function App() {
                                 textAlign: "center", marginTop: 12,
                                 fontFamily: "'Nunito',sans-serif", fontSize: 13, color: "#888", fontWeight: 700
                             }}>
-                                🎭 Drop your .glb or .fbx character to see it here!
+                                ✨ Learning and fun in every adventure!
                             </div>
                         </div>
                     </div>
@@ -648,43 +577,7 @@ export default function App() {
                         gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
                         gap: 28, position: "relative", zIndex: 1
                     }}>
-                        {filtered.map((g, i) => <GameCard key={g.id} game={g} i={i} />)}
-                    </div>
-                </section>
-
-                {/* ── TRUST SECTION ── */}
-                <section style={{ background: "#1A1A4E", padding: "80px 8%", position: "relative", overflow: "hidden" }}>
-                    <Blob color="#C77DFF" size="300px" top="-80px" left="70%" opacity={0.15} delay={0} />
-                    <div style={{ textAlign: "center", marginBottom: 56, position: "relative", zIndex: 1 }}>
-                        <h2 style={{
-                            fontFamily: "'Fredoka One',cursive", fontSize: "clamp(28px,3.5vw,46px)",
-                            color: "#FFD93D", marginBottom: 12
-                        }}>Parents Love TinyPlay</h2>
-                        <p style={{ color: "#aaa", fontSize: 16, fontWeight: 600 }}>
-                            Built with safety and learning at the core — every single day
-                        </p>
-                    </div>
-                    <div style={{
-                        display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
-                        gap: 24, position: "relative", zIndex: 1
-                    }}>
-                        {BADGES.map((b, i) => (
-                            <div key={i} style={{
-                                background: "rgba(255,255,255,0.06)", borderRadius: 24,
-                                padding: "32px 20px", textAlign: "center", border: "1px solid rgba(255,255,255,0.1)",
-                                animation: `popIn 0.5s ease ${i * 0.1}s both`
-                            }}>
-                                <div style={{
-                                    fontSize: 44, marginBottom: 12,
-                                    animation: `float ${3 + i * 0.4}s ease-in-out infinite`
-                                }}>{b.icon}</div>
-                                <div style={{
-                                    fontFamily: "'Fredoka One',cursive", fontSize: 20,
-                                    color: "#fff", marginBottom: 6
-                                }}>{b.title}</div>
-                                <div style={{ fontSize: 13, color: "#aaa", fontWeight: 600 }}>{b.sub}</div>
-                            </div>
-                        ))}
+                        {filtered.map((g, i) => <GameCard key={g.id} game={g} i={i} onPlay={openGame} />)}
                     </div>
                 </section>
 
@@ -728,41 +621,6 @@ export default function App() {
                     </div>
                 </section>
 
-                {/* ── CTA ── */}
-                <section style={{
-                    padding: "100px 8%", textAlign: "center", position: "relative",
-                    background: "linear-gradient(135deg, #FFF8ED, #FFE8F5)",
-                    overflow: "hidden"
-                }}>
-                    <Blob color="#FF6B6B" size="350px" top="-80px" left="-80px" opacity={0.15} delay={0} />
-                    <Blob color="#FFD93D" size="280px" top="30%" left="75%" opacity={0.18} delay={2} />
-                    <div style={{ position: "relative", zIndex: 1 }}>
-                        <div style={{
-                            fontSize: 72, marginBottom: 24,
-                            animation: "float 3s ease-in-out infinite"
-                        }}>🚀</div>
-                        <h2 style={{
-                            fontFamily: "'Fredoka One',cursive", fontSize: "clamp(32px,4vw,58px)",
-                            color: "#1A1A4E", marginBottom: 20
-                        }}>
-                            Ready to Start Playing?
-                        </h2>
-                        <p style={{ fontSize: 18, color: "#666", marginBottom: 40, fontWeight: 600, maxWidth: 480, margin: "0 auto 40px" }}>
-                            Join 500,000+ kids on the most loved children's gaming platform. Free forever!
-                        </p>
-                        <button style={{
-                            background: "#FF6B6B", color: "#fff", border: "none",
-                            borderRadius: 999, padding: "20px 52px", fontFamily: "'Fredoka One',cursive",
-                            fontSize: 24, cursor: "pointer", boxShadow: "0 12px 40px #FF6B6B44",
-                            transition: "transform 0.2s, box-shadow 0.2s"
-                        }}
-                            onMouseEnter={e => { e.target.style.transform = "scale(1.07)"; e.target.style.boxShadow = "0 18px 50px #FF6B6B66"; }}
-                            onMouseLeave={e => { e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "0 12px 40px #FF6B6B44"; }}>
-                            🎮 Play Now — It's Free!
-                        </button>
-                    </div>
-                </section>
-
                 {/* ── FOOTER ── */}
                 <footer style={{
                     background: "#1A1A4E", padding: "40px 8%",
@@ -786,6 +644,16 @@ export default function App() {
                         ))}
                     </div>
                 </footer>
+
+                <GameModal
+                    isOpen={isModalOpen}
+                    onClose={closeGame}
+                    title={activeGame?.name}
+                    color={activeGame?.color}
+                >
+                    {ActiveGameComponent && <ActiveGameComponent />}
+                </GameModal>
+
             </div>
         </>
     );
