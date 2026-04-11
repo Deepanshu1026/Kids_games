@@ -3,35 +3,45 @@ import memoryMatchImg from './assets/memory_match.png'
 import mathJungleImg from './assets/math_jungle.png'
 import wordBalloonsImg from './assets/word_balloons.png'
 import CharacterViewer from './components/hero'
+import GameModal from './components/GameModal'
+import MemoryMatch from './components/games/MemoryMatch'
+import BalloonPop from './components/games/BalloonPop'
+import AnimalFun from './components/games/AnimalFun'
+
 const games = [
+  {
+    id: 'balloons',
+    title: 'Balloon Pop',
+    description: 'Pop as many balloons as you can! Perfect for little hands.',
+    image: wordBalloonsImg,
+    category: 'Fun',
+    color: '#FF6B6B',
+    component: BalloonPop
+  },
+  {
+    id: 'animals',
+    title: 'Animal Fun',
+    description: 'Learn animal names and sounds in this interactive game.',
+    image: mathJungleImg,
+    category: 'Learning',
+    color: '#4ECDC4',
+    component: AnimalFun
+  },
   {
     id: 'memory',
     title: 'Memory Match',
     description: 'Find all the matching animal pairs! Fun and educational.',
     image: memoryMatchImg,
     category: 'Memory',
-    color: '#FF6B6B'
-  },
-  {
-    id: 'math',
-    title: 'Math Jungle',
-    description: 'Solve fun math puzzles to help the monkey reach the bananas.',
-    image: mathJungleImg,
-    category: 'Learning',
-    color: '#4ECDC4'
-  },
-  {
-    id: 'words',
-    title: 'Word Balloons',
-    description: 'Pop the balloons to spell out words and learn new vocabulary.',
-    image: wordBalloonsImg,
-    category: 'Spelling',
-    color: '#FFE66D'
+    color: '#FFE66D',
+    component: MemoryMatch
   }
 ]
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
+  const [activeGame, setActiveGame] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +50,18 @@ function App() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const openGame = (game) => {
+    setActiveGame(game)
+    setIsModalOpen(true)
+  }
+
+  const closeGame = () => {
+    setIsModalOpen(false)
+    setActiveGame(null)
+  }
+
+  const ActiveGameComponent = activeGame ? activeGame.component : null
 
   return (
     <div className="app">
@@ -64,7 +86,7 @@ function App() {
             <h1 className="floating">Where Learning <br /> Meets <span style={{ color: '#4ECDC4' }}>Adventure!</span></h1>
             <p>Explore our collection of fun, safe, and educational games designed just for you.</p>
             <div style={{ marginTop: '32px' }}>
-              <button className="btn btn-primary">Start Playing Now</button>
+              <button className="btn btn-primary" onClick={() => openGame(games[0])}>Start Playing Now</button>
             </div>
           </div>
         </section>
@@ -80,7 +102,7 @@ function App() {
 
           <div className="game-grid">
             {games.map((game) => (
-              <div key={game.id} className="game-card">
+              <div key={game.id} className="game-card" onClick={() => openGame(game)}>
                 <div className="game-badge">{game.category}</div>
                 <img src={game.image} alt={game.title} className="game-image" />
                 <div className="game-info">
@@ -89,6 +111,10 @@ function App() {
                 </div>
                 <button
                   className="btn btn-primary"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    openGame(game)
+                  }}
                   style={{ backgroundColor: game.color, border: 'none', width: '100%', marginTop: 'auto' }}
                 >
                   Play Now
@@ -128,6 +154,16 @@ function App() {
           <p>© 2026 KidsPlay Universe. Made with ❤️ for curious minds.</p>
         </div>
       </footer>
+
+      {/* Game Modal */}
+      <GameModal
+        isOpen={isModalOpen}
+        onClose={closeGame}
+        title={activeGame?.title}
+        color={activeGame?.color}
+      >
+        {ActiveGameComponent && <ActiveGameComponent />}
+      </GameModal>
     </div>
   )
 }
