@@ -11,10 +11,14 @@ import ShadowMatch from './games/ShadowMatch'
 import ColorMixer from './games/ColorMixer'
 import PetParade from './games/PetParade'
 import RocketLaunch from './games/RocketLaunch'
-import mathJungleImg from '../assets/math_jungle.png'
-import memoryMatchImg from '../assets/memory_match.png'
-import wordBalloonsImg from '../assets/word_balloons.png'
-import heroImg from '../assets/hero.png'
+import rocketImg from '../assets/toy_rocket_transparent.png'
+import monkeyImg from '../assets/cute_monkey_transparent.png'
+import puzzleImg from '../assets/toy_puzzle_transparent.png'
+import balloonsImg from '../assets/toy_balloons_transparent.png'
+import drumImg from '../assets/toy_drum_transparent.png'
+import paletteImg from '../assets/color_palette_transparent.png'
+import monkeyGif from '../assets/waving_monkey.svg'
+import animatedMonkeyVideo from '../assets/animated_monkey.mp4'
 
 // ── Google Fonts ──────────────────────────────────────────────────────────────
 const FontLink = () => (
@@ -100,11 +104,78 @@ const FontLink = () => (
     `}</style>
 );
 
+// ── Black Background Remover Video ────────────────────────────────────────────
+const BlackKeyVideo = ({ src, style }) => {
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        let animationFrameId;
+
+        const computeFrame = () => {
+            if (!video || !canvas || video.paused || video.ended) return;
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const l = frame.data.length / 4;
+
+            for (let i = 0; i < l; i++) {
+                const r = frame.data[i * 4 + 0];
+                const g = frame.data[i * 4 + 1];
+                const b = frame.data[i * 4 + 2];
+
+                // Remove pure black background
+                if (r < 18 && g < 18 && b < 18) {
+                    frame.data[i * 4 + 3] = 0;
+                } else if (r < 30 && g < 30 && b < 30) {
+                    // Soft fade for anti-aliasing edges
+                    const avg = (r + g + b) / 3;
+                    frame.data[i * 4 + 3] = Math.max(0, (avg - 18) * 20);
+                }
+            }
+
+            ctx.putImageData(frame, 0, 0);
+            animationFrameId = requestAnimationFrame(computeFrame);
+        };
+
+        const handlePlay = () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            computeFrame();
+        };
+
+        video.addEventListener("play", handlePlay);
+        return () => {
+            video.removeEventListener("play", handlePlay);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, []);
+
+    return (
+        <div style={style}>
+            <video
+                ref={videoRef}
+                src={src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{ display: "none" }}
+            />
+            <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
+        </div>
+    );
+};
+
 // ── Image Slider ──────────────────────────────────────────────────────────────
 const ImageSlider = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const images = [mathJungleImg, memoryMatchImg, wordBalloonsImg, heroImg];
-    
+    const images = [rocketImg, monkeyImg, puzzleImg, balloonsImg, drumImg, paletteImg];
+
+
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -115,7 +186,7 @@ const ImageSlider = () => {
     return (
         <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {images.map((img, idx) => (
-                <img 
+                <img
                     key={idx}
                     src={img}
                     alt="Game Thumbnail"
@@ -131,19 +202,19 @@ const ImageSlider = () => {
                     }}
                 />
             ))}
-            
+
             {/* Slider Controls */}
             <div style={{ position: "absolute", bottom: "-30px", display: "flex", gap: "10px" }}>
                 {images.map((_, idx) => (
-                    <button 
+                    <button
                         key={idx}
                         onClick={() => setCurrentIndex(idx)}
                         title={`Go to slide ${idx + 1}`}
                         style={{
-                            width: currentIndex === idx ? "24px" : "12px", 
-                            height: "12px", 
+                            width: currentIndex === idx ? "24px" : "12px",
+                            height: "12px",
                             borderRadius: "999px",
-                            border: "none", 
+                            border: "none",
                             cursor: "pointer",
                             background: currentIndex === idx ? "#FF6B6B" : "#FFD93D",
                             transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
@@ -483,6 +554,19 @@ export default function App() {
                     <Star top="70%" left="15%" color="#C77DFF" size={24} delay={1} />
                     <Star top="80%" left="72%" color="#6BCFB0" size="18px" delay={1.5} />
                     <Star top="45%" left="48%" color="#FF9A3C" size="16px" delay={0.8} />
+
+                    <BlackKeyVideo
+                        src={animatedMonkeyVideo}
+                        style={{
+                            position: "fixed",
+                            left: "2%",
+                            bottom: "5%",
+                            width: "220px",
+                            zIndex: 1000,
+                            pointerEvents: "none",
+                            filter: "drop-shadow(0 15px 30px rgba(0,0,0,0.15))"
+                        }}
+                    />
 
                     {/* Content */}
                     <div className="hero-grid" style={{ position: "relative", zIndex: 2 }}>
