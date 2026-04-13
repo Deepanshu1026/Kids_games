@@ -11,7 +11,10 @@ import ShadowMatch from './games/ShadowMatch'
 import ColorMixer from './games/ColorMixer'
 import PetParade from './games/PetParade'
 import RocketLaunch from './games/RocketLaunch'
-import kidsVideo from '../assets/greenscreen.mp4'
+import mathJungleImg from '../assets/math_jungle.png'
+import memoryMatchImg from '../assets/memory_match.png'
+import wordBalloonsImg from '../assets/word_balloons.png'
+import heroImg from '../assets/hero.png'
 
 // ── Google Fonts ──────────────────────────────────────────────────────────────
 const FontLink = () => (
@@ -97,73 +100,58 @@ const FontLink = () => (
     `}</style>
 );
 
-
-
-const ChromaKeyVideo = ({ src, style }) => {
-    const videoRef = useRef(null);
-    const canvasRef = useRef(null);
-
+// ── Image Slider ──────────────────────────────────────────────────────────────
+const ImageSlider = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const images = [mathJungleImg, memoryMatchImg, wordBalloonsImg, heroImg];
+    
     useEffect(() => {
-        const video = videoRef.current;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        let animationFrameId;
-
-        const computeFrame = () => {
-            if (!video || !canvas || video.paused || video.ended) return;
-
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const l = frame.data.length / 4;
-
-            for (let i = 0; i < l; i++) {
-                const r = frame.data[i * 4 + 0];
-                const g = frame.data[i * 4 + 1];
-                const b = frame.data[i * 4 + 2];
-
-                // Improved Green Screen Detection
-                // Targeted for lime/bright green while protecting the cyan/yellow bunny
-                if (g > 120 && r < g * 0.7 && b < g * 0.7) {
-                    frame.data[i * 4 + 3] = 0; // Alpha = 0 (Transparent)
-                } else if (g > 90 && r < g * 0.8 && b < g * 0.8) {
-                    // Soft edge blending
-                    const alpha = Math.max(0, 255 - (g - Math.max(r, b)) * 2);
-                    frame.data[i * 4 + 3] = alpha;
-                }
-            }
-
-            ctx.putImageData(frame, 0, 0);
-            animationFrameId = requestAnimationFrame(computeFrame);
-        };
-
-        const handlePlay = () => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            computeFrame();
-        };
-
-        video.addEventListener("play", handlePlay);
-        return () => {
-            video.removeEventListener("play", handlePlay);
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, []);
+        const timer = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % images.length);
+        }, 3000);
+        return () => clearInterval(timer);
+    }, [images.length]);
 
     return (
-        <div style={{ position: "relative", width: "100%", height: "100%" }}>
-            <video
-                ref={videoRef}
-                src={src}
-                autoPlay
-                loop
-                muted
-                playsInline
-                style={{ display: "none" }} // Hide the actual video
-            />
-            <canvas
-                ref={canvasRef}
-                style={{ ...style, width: "100%", height: "100%" }}
-            />
+        <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {images.map((img, idx) => (
+                <img 
+                    key={idx}
+                    src={img}
+                    alt="Game Thumbnail"
+                    style={{
+                        position: "absolute",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                        opacity: currentIndex === idx ? 1 : 0,
+                        transform: currentIndex === idx ? "scale(1.05) translateY(-5px)" : "scale(0.8) translateY(20px)",
+                        transition: "all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                        filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.15))"
+                    }}
+                />
+            ))}
+            
+            {/* Slider Controls */}
+            <div style={{ position: "absolute", bottom: "-30px", display: "flex", gap: "10px" }}>
+                {images.map((_, idx) => (
+                    <button 
+                        key={idx}
+                        onClick={() => setCurrentIndex(idx)}
+                        title={`Go to slide ${idx + 1}`}
+                        style={{
+                            width: currentIndex === idx ? "24px" : "12px", 
+                            height: "12px", 
+                            borderRadius: "999px",
+                            border: "none", 
+                            cursor: "pointer",
+                            background: currentIndex === idx ? "#FF6B6B" : "#FFD93D",
+                            transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                        }}
+                    />
+                ))}
+            </div>
         </div>
     );
 };
@@ -578,18 +566,12 @@ export default function App() {
                             }} />
                             <div style={{
                                 position: "relative", zIndex: 1,
-                                background: "rgba(255,255,255,0.05)", backdropFilter: "blur(10px)",
-                                borderRadius: 36, border: "2px solid rgba(255,255,255,0.4)",
-                                overflow: "hidden", height: 460,
-                                boxShadow: "0 24px 64px rgba(200,120,255,0.05)"
+                                height: 460,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
                             }}>
-                                <ChromaKeyVideo
-                                    src={kidsVideo}
-                                    style={{
-                                        objectFit: "contain",
-                                        transform: "scale(1.2)"
-                                    }}
-                                />
+                                <ImageSlider />
                             </div>
                             {/* floating bubbles around viewer */}
                             {[["🎮", "top:10px;right:10px", "#FFD93D"], ["⭐", "bottom:14px;left:10px", "#FF6B6B"],
