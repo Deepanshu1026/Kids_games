@@ -257,6 +257,7 @@ const GAMES = [
         age: "2-3 yrs",
         players: "1 Player",
         emoji: "🎨",
+        img: paletteImg,
         color: "#FF6B6B",
         bg: "#fff0f0",
         component: DoodleWorld
@@ -269,6 +270,7 @@ const GAMES = [
         age: "3-5 yrs",
         players: "1-2 Players",
         emoji: "🔢",
+        img: monkeyImg,
         color: "#6BCFB0",
         bg: "#f0fff9",
         component: NumberSafari
@@ -281,6 +283,7 @@ const GAMES = [
         age: "2-4 yrs",
         players: "1 Player",
         emoji: "🧩",
+        img: puzzleImg,
         color: "#C77DFF",
         bg: "#f8f0ff",
         component: ShapeKingdom
@@ -293,6 +296,7 @@ const GAMES = [
         age: "2-5 yrs",
         players: "1-4 Players",
         emoji: "🎵",
+        img: drumImg,
         color: "#FF9A3C",
         bg: "#fff5ec",
         component: MusicJungle
@@ -305,6 +309,7 @@ const GAMES = [
         age: "3-5 yrs",
         players: "1 Player",
         emoji: "👤",
+        img: monkeyImg,
         color: "#636E72",
         bg: "#f0f0f0",
         component: ShadowMatch
@@ -317,6 +322,7 @@ const GAMES = [
         age: "3-5 yrs",
         players: "1 Player",
         emoji: "🧪",
+        img: paletteImg,
         color: "#55E6C1",
         bg: "#f0fff9",
         component: ColorMixer
@@ -329,6 +335,7 @@ const GAMES = [
         age: "2-5 yrs",
         players: "1 Player",
         emoji: "🐾",
+        img: monkeyImg,
         color: "#FF9FF3",
         bg: "#fff0fa",
         component: PetParade
@@ -341,6 +348,7 @@ const GAMES = [
         age: "4-5 yrs",
         players: "1 Player",
         emoji: "🚀",
+        img: rocketImg,
         color: "#0984E3",
         bg: "#f0f7ff",
         component: RocketLaunch
@@ -353,6 +361,7 @@ const GAMES = [
         tag: "Skill",
         age: "2-4 yrs",
         players: "1 Player",
+        img: balloonsImg,
         color: "#FF8E8E",
         bg: "#fff0f0",
         component: BalloonPop
@@ -365,6 +374,7 @@ const GAMES = [
         tag: "Mind",
         age: "3-5 yrs",
         players: "1-2 Players",
+        img: puzzleImg,
         color: "#FFE66D",
         bg: "#fffef0",
         component: MemoryMatch
@@ -394,10 +404,19 @@ const GameCard = ({ game, i, onPlay }) => {
                 boxShadow: hovered ? `0 20px 40px ${game.color}33` : "0 4px 18px rgba(0,0,0,0.07)",
             }}>
             <div style={{
-                fontSize: 52, textAlign: "center", marginBottom: 12,
+                height: 72, display: "flex", alignItems: "flex-end", justifyContent: "center", marginBottom: 16,
+                marginTop: -10, // Bring it up slightly to balance layout
                 animation: `float ${3 + i * 0.3}s ease-in-out infinite`
             }}>
-                {game.emoji}
+                {game.img ? (
+                    <img src={game.img} alt={game.name} style={{
+                        maxHeight: "100%", maxWidth: "100%", objectFit: "contain",
+                        filter: "drop-shadow(0 12px 18px rgba(0,0,0,0.12))",
+                        transform: "scale(1.2)" // make it pop a little bigger
+                    }} />
+                ) : (
+                    <span style={{ fontSize: 52 }}>{game.emoji}</span>
+                )}
             </div>
             <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 12 }}>
                 <span style={{
