@@ -462,6 +462,121 @@ const Marquee = () => {
     );
 };
 
+// ── Horizontal Game Showcase Slider ──────────────────────────────────────────
+const ShowcaseSlider = ({ onPlay }) => {
+    const sliderRef = useRef(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+
+    const checkScroll = () => {
+        if (sliderRef.current) {
+            const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
+            setCanScrollLeft(scrollLeft > 0);
+            setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 2);
+        }
+    };
+
+    const scroll = (direction) => {
+        if (sliderRef.current) {
+            const scrollAmount = direction === "left" ? -600 : 600;
+            sliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+            setTimeout(checkScroll, 400);
+        }
+    };
+
+    useEffect(() => {
+        checkScroll();
+        window.addEventListener('resize', checkScroll);
+        return () => window.removeEventListener('resize', checkScroll);
+    }, []);
+
+    const showCaseGames = [
+        { id: 1, name: "Monkey Jump", img: monkeyImg, bg: "#FF6B6B", border: "#FF8E8E", textId: "MONKEY\\nJUMP!", width: 270, realGame: GAMES[0] }, // Doodle World
+        { id: 2, name: "Rocket Math", img: rocketImg, bg: "#4FC3F7", border: "#8EE4FF", textId: "SPACE\\nMATH", width: 270, realGame: GAMES[7] }, // Rocket Launch
+        { id: 3, name: "Pattern Puzzle", img: puzzleImg, bg: "#C77DFF", border: "#E0B3FF", textId: "PUZZLE\\nTIME", width: 270, realGame: GAMES[2] }, // Shape Kingdom
+        { id: 4, name: "Color Pop", img: balloonsImg, bg: "#6BCFB0", border: "#93E4CC", textId: "COLOR\\nPOP", width: 270, realGame: GAMES[8] }, // Balloon Pop
+        { id: 5, name: "Beat Drum", img: drumImg, bg: "#FF9A3C", border: "#FFB87A", textId: "DRUM\\nBEATS", width: 270, realGame: GAMES[3] }, // Music Jungle
+        { id: 6, name: "Art Studio", img: paletteImg, bg: "#FFD93D", border: "#FFE885", textId: "PAINT\\nFUN", width: 270, realGame: GAMES[5] }, // Color Mixer
+        { id: 7, name: "Monkey Fun", img: monkeyImg, bg: "#FF6B6B", border: "#FF8E8E", textId: "SUPER\\nMONKEY", width: 270, realGame: GAMES[4] }, // Shadow Match
+        { id: 8, name: "Rocket Run", img: rocketImg, bg: "#4FC3F7", border: "#8EE4FF", textId: "ROCKET\\nRUN", width: 270, realGame: GAMES[9] }, // Memory Match
+    ];
+
+    return (
+        <div style={{ position: "relative", width: "100%", background: "var(--cream)", padding: "10px 0 30px 0" }}>
+            <style>{`
+                .slider-wrapper { position: relative; max-width: 1400px; margin: 0 auto; padding: 0 60px; }
+                .slider-container {
+                    display: flex; gap: 24px; overflow-x: auto; padding: 60px 10px 30px 10px;
+                    scroll-behavior: smooth; scrollbar-width: none; ms-overflow-style: none;
+                }
+                .slider-container::-webkit-scrollbar { display: none; }
+                .showcase-card {
+                    position: relative; height: 110px; border-radius: 20px; flex-shrink: 0; cursor: pointer;
+                    display: flex; align-items: center; justify-content: flex-end; padding: 0 20px;
+                    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+                }
+                .showcase-card:hover { transform: scale(1.05) translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
+                .showcase-card::before {
+                    content: ''; position: absolute; inset: 0; 
+                    background-image: radial-gradient(rgba(255,255,255,0.3) 2px, transparent 2px); 
+                    background-size: 16px 16px; border-radius: 20px; opacity: 0.5;
+                }
+                .showcase-char {
+                    position: absolute; left: -15px; bottom: 0; height: 155px; max-width: 150px;
+                    object-fit: contain; pointer-events: none; z-index: 2;
+                    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+                    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    transform-origin: bottom center;
+                }
+                .showcase-card:hover .showcase-char { transform: scale(1.1) rotate(-5deg) translateY(-4px); }
+                
+                .showcase-logo {
+                    font-family: 'Fredoka One', cursive; color: white;
+                    text-align: right; line-height: 1.1; font-size: 26px; z-index: 1;
+                    text-shadow: 2px 2px 0px rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.2);
+                }
+                .slider-btn {
+                    position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+                    width: 48px; height: 48px; border-radius: 12px; border: none;
+                    background: #1A1A4E; color: white; font-size: 24px; font-weight: bold;
+                    display: flex; align-items: center; justify-content: center; cursor: pointer;
+                    box-shadow: 0 8px 20px rgba(26, 26, 78, 0.3); transition: all 0.2s;
+                }
+                .slider-btn:hover:not(:disabled) { background: #FF6B6B; transform: translateY(-50%) scale(1.1); }
+                .slider-btn:disabled { opacity: 0; pointer-events: none; }
+                
+                @media (max-width: 768px) {
+                    .slider-wrapper { padding: 0 20px; }
+                    .slider-btn { display: none; }
+                    .showcase-card { height: 90px; }
+                    .showcase-char { height: 130px; }
+                    .showcase-logo { font-size: 22px; }
+                }
+            `}</style>
+
+            <div className="slider-wrapper">
+                <button className="slider-btn" style={{ left: 0 }} onClick={() => scroll("left")} disabled={!canScrollLeft}>❮</button>
+
+                <div className="slider-container" ref={sliderRef} onScroll={checkScroll}>
+                    {showCaseGames.map((game, i) => (
+                        <div key={i} className="showcase-card" onClick={() => onPlay && onPlay(game.realGame)} style={{ background: game.bg, borderBottom: `6px solid ${game.border}`, width: game.width }}>
+                            <img src={game.img} alt={game.name} className="showcase-char" style={{
+                                transform: game.name.includes('Rocket') ? 'rotate(40deg) translateY(20px)' : (game.name.includes('Color Pop') ? 'rotate(-10deg) scale(1.1) translateY(10px)' : 'none')
+                            }} />
+                            <div className="showcase-logo">
+                                {game.textId.split('\\n').map((line, idx) => <div key={idx}>{line}</div>)}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <button className="slider-btn" style={{ right: 0 }} onClick={() => scroll("right")} disabled={!canScrollRight}>❯</button>
+            </div>
+        </div>
+    );
+};
+
 // ── Trust Badges ──────────────────────────────────────────────────────────────
 const BADGES = [
     { icon: "🔒", title: "100% Safe", sub: "No in-app purchases" },
@@ -682,6 +797,9 @@ export default function App() {
 
                 {/* ── MARQUEE ── */}
                 <Marquee />
+
+                {/* ── GAME SHOWCASE SLIDER ── */}
+                <ShowcaseSlider onPlay={openGame} />
 
                 {/* ── GAMES SECTION ── */}
                 <section style={{ padding: "100px 8%", position: "relative" }}>
