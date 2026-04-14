@@ -37,7 +37,7 @@ const ColorMixer = () => {
   };
 
   return (
-    <div style={{ 
+    <div className="game-screen color-mixer-game" style={{ 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
@@ -49,9 +49,10 @@ const ColorMixer = () => {
     }}>
       <h3 style={{ fontSize: '1.5rem', marginBottom: '30px' }}>Pick two colors to mix!</h3>
       
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginBottom: '40px' }}>
+      <div className="color-palette-row" style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginBottom: '40px' }}>
         {colors.map((c) => (
           <motion.div
+            className="color-choice"
             key={c.name}
             onClick={() => handleSelect(c)}
             whileHover={{ scale: 1.1 }}
@@ -76,12 +77,13 @@ const ColorMixer = () => {
         ))}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '30px' }}>
-        <div style={{ width: '110px', height: '110px', borderRadius: '28px', background: selected[0]?.hex || '#f5f5f5', border: '3px dashed #ddd', transition: 'all 0.3s' }}></div>
+      <div className="color-equation-row" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '30px' }}>
+        <div className="mix-swatch" style={{ width: '110px', height: '110px', borderRadius: '28px', background: selected[0]?.hex || '#f5f5f5', border: '3px dashed #ddd', transition: 'all 0.3s' }}></div>
         <span style={{ fontSize: '3rem', color: '#666' }}>+</span>
-        <div style={{ width: '110px', height: '110px', borderRadius: '28px', background: selected[1]?.hex || '#f5f5f5', border: '3px dashed #ddd', transition: 'all 0.3s' }}></div>
+        <div className="mix-swatch" style={{ width: '110px', height: '110px', borderRadius: '28px', background: selected[1]?.hex || '#f5f5f5', border: '3px dashed #ddd', transition: 'all 0.3s' }}></div>
         <span style={{ fontSize: '3rem', color: '#666' }}>=</span>
         <motion.div 
+          className="mix-result"
           animate={result ? { scale: [1, 1.15, 1], rotate: [0, 5, -5, 0] } : {}}
           style={{ width: '130px', height: '130px', borderRadius: '35px', background: result?.hex || '#f5f5f5', border: '3px solid #eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '900', fontSize: '1.4rem' }}
         >

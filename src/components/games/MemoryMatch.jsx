@@ -44,7 +44,7 @@ const MemoryMatch = () => {
   };
 
   return (
-    <div style={{ 
+    <div className="game-screen memory-match-game" style={{ 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
@@ -71,7 +71,7 @@ const MemoryMatch = () => {
         )}
       </div>
       
-      <div style={{
+      <div className="memory-board" style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)',
         gap: '12px',

@@ -15,7 +15,7 @@ const AnimalFun = () => {
   const [selected, setSelected] = useState(null);
 
   return (
-    <div style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="game-screen animal-fun-game" style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <h3 style={{ marginBottom: '20px' }}>Tap an animal to hear them!</h3>
       
       <div style={{

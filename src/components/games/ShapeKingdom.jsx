@@ -39,7 +39,7 @@ const ShapeKingdom = () => {
   };
 
   return (
-    <div style={{ 
+    <div className="game-screen shape-kingdom-game" style={{ 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
@@ -49,7 +49,7 @@ const ShapeKingdom = () => {
       padding: '20px',
       textAlign: 'center'
     }}>
-      <div style={{ 
+      <div className="game-score-pill" style={{ 
         position: 'absolute', 
         top: '20px', 
         right: '20px',
@@ -63,7 +63,7 @@ const ShapeKingdom = () => {
         Score: {score}
       </div>
       
-      <div style={{ 
+      <div className="shape-target-card" style={{ 
         background: '#ffffff', 
         padding: '50px', 
         borderRadius: '40px', 
@@ -78,6 +78,7 @@ const ShapeKingdom = () => {
             key={target.id}
             initial={{ scale: 0, rotate: -45 }}
             animate={{ scale: 1, rotate: 0 }}
+            className="shape-target-icon"
             style={{ 
               fontSize: '8rem', 
               color: target.color,
@@ -99,7 +100,7 @@ const ShapeKingdom = () => {
         </h2>
       </div>
 
-      <div style={{ 
+      <div className="shape-options" style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         gap: '24px', 

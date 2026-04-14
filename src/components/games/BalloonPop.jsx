@@ -43,7 +43,7 @@ const BalloonPop = () => {
   };
 
   return (
-    <div style={{ 
+    <div className="game-screen balloon-pop-game" style={{ 
       position: 'relative', 
       width: '100%', 
       height: '100%', 

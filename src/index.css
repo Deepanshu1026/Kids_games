@@ -238,3 +238,422 @@ p {
 .pulse {
   animation: pulse 2s ease-in-out infinite;
 }
+
+@media (max-width: 900px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .tinyplay-page {
+    width: 100%;
+  }
+
+  .site-nav {
+    height: 60px !important;
+    padding: 0 16px !important;
+    gap: 12px !important;
+  }
+
+  .site-logo {
+    min-width: 0;
+  }
+
+  .site-logo span:last-child {
+    font-size: 1.25rem !important;
+  }
+
+  .nav-cta {
+    padding: 9px 14px !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important;
+    white-space: nowrap;
+  }
+
+  .hero-stage {
+    min-height: auto !important;
+    padding-top: 76px !important;
+  }
+
+  .hero-grid {
+    padding: 32px 16px 44px !important;
+    gap: 28px !important;
+  }
+
+  .hero-title {
+    max-width: 11ch;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-wrap: break-word;
+  }
+
+  .hero-desc {
+    max-width: 32rem !important;
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .hero-buttons {
+    width: 100%;
+  }
+
+  .hero-buttons button {
+    flex: 1 1 220px;
+    min-height: 48px;
+    padding: 13px 16px !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+  }
+
+  .stats-row {
+    margin-top: 28px !important;
+  }
+
+  .hero-visual {
+    width: min(100%, 420px);
+    margin: 0 auto;
+  }
+
+  .hero-visual-frame {
+    height: 260px !important;
+  }
+
+  .floating-helper-video {
+    width: 120px !important;
+    bottom: 12px !important;
+    left: 8px !important;
+    z-index: 20 !important;
+  }
+
+  .games-section,
+  .testimonials-section {
+    padding: 56px 16px !important;
+  }
+
+  .filter-chips {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    padding: 4px 4px 12px;
+    margin: 0 -4px 32px !important;
+    scrollbar-width: none;
+  }
+
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chips button {
+    flex: 0 0 auto;
+    border-radius: 8px !important;
+    transform: none !important;
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)) !important;
+    gap: 18px !important;
+  }
+
+  .showcase-card {
+    width: min(270px, 72vw) !important;
+    border-radius: 8px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-nav {
+    height: 56px !important;
+  }
+
+  .site-logo span:first-child {
+    font-size: 1.5rem !important;
+  }
+
+  .site-logo span:last-child {
+    font-size: 1.05rem !important;
+  }
+
+  .hero-grid {
+    padding-top: 24px !important;
+  }
+
+  .hero-title {
+    font-size: 2.1rem !important;
+  }
+
+  .hero-visual-frame {
+    height: 210px !important;
+  }
+
+  .floating-helper-video {
+    width: 88px !important;
+    opacity: 0.85;
+  }
+
+  .footer-content {
+    padding: 30px 16px calc(30px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-cta {
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .hero-title {
+    font-size: 1.85rem !important;
+  }
+
+  .hero-buttons button {
+    flex-basis: 100%;
+  }
+
+  .hero-visual-frame {
+    height: 180px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-screen {
+    min-height: 100%;
+    overflow: auto !important;
+    padding: 12px !important;
+  }
+
+  .game-screen h2,
+  .game-screen h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .game-screen p {
+    font-size: 0.95rem !important;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 11px 16px !important;
+    border-radius: 8px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .memory-match-game {
+    justify-content: flex-start !important;
+  }
+
+  .memory-board {
+    max-width: min(92vw, 360px) !important;
+    gap: 8px !important;
+  }
+
+  .memory-board [style*="font-size: 2.5rem"] {
+    font-size: 1.8rem !important;
+    border-radius: 8px !important;
+  }
+
+  .music-jungle-game {
+    justify-content: flex-start !important;
+  }
+
+  .music-grid {
+    gap: 12px !important;
+  }
+
+  .instrument-card {
+    padding: 18px 10px !important;
+    border-radius: 8px !important;
+    border-width: 3px !important;
+  }
+
+  .instrument-card > div:first-child {
+    font-size: 3rem !important;
+  }
+
+  .color-mixer-game {
+    justify-content: flex-start !important;
+  }
+
+  .color-palette-row,
+  .color-equation-row {
+    gap: 12px !important;
+    margin-bottom: 22px !important;
+    flex-wrap: wrap;
+  }
+
+  .color-choice {
+    width: 72px !important;
+    height: 72px !important;
+  }
+
+  .mix-swatch,
+  .mix-result {
+    width: 78px !important;
+    height: 78px !important;
+    border-radius: 8px !important;
+  }
+
+  .color-equation-row span {
+    font-size: 1.9rem !important;
+  }
+
+  .doodle-toolbar {
+    flex-wrap: wrap;
+    gap: 10px !important;
+    padding: 10px !important;
+  }
+
+  .doodle-toolbar > div:first-child {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .number-safari-game {
+    padding-top: 10px !important;
+  }
+
+  .safari-scene {
+    min-height: 220px !important;
+    margin: 8px 0 !important;
+    border-radius: 8px !important;
+  }
+
+  .safari-scene [style*="font-size: 4rem"] {
+    font-size: 2.6rem !important;
+  }
+
+  .number-options {
+    gap: 12px !important;
+    flex-wrap: wrap;
+  }
+
+  .number-options button {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .pet-options,
+  .pet-actions,
+  .rocket-actions,
+  .shadow-options,
+  .shape-options {
+    flex-wrap: wrap;
+    gap: 12px !important;
+  }
+
+  .pet-options > div {
+    padding: 22px 18px !important;
+    border-radius: 8px !important;
+  }
+
+  .pet-stage {
+    height: 190px !important;
+  }
+
+  .pet-emoji {
+    font-size: 6rem !important;
+  }
+
+  .happiness-bar {
+    width: min(250px, 80vw) !important;
+  }
+
+  .pet-actions {
+    margin-top: 20px !important;
+  }
+
+  .rocket-launch-game {
+    border-radius: 0 !important;
+  }
+
+  .rocket-controls {
+    padding: 16px !important;
+  }
+
+  .game-score-pill {
+    position: static !important;
+    align-self: flex-end;
+    margin-bottom: 12px;
+    font-size: 1rem !important;
+    border-radius: 8px !important;
+  }
+
+  .shape-target-card {
+    padding: 20px !important;
+    margin-bottom: 18px !important;
+    border-radius: 8px !important;
+  }
+
+  .shape-target-icon {
+    font-size: 5rem !important;
+  }
+
+  .shape-options button {
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 8px !important;
+    font-size: 2.4rem !important;
+  }
+
+  .shadow-target-wrap {
+    margin-bottom: 24px !important;
+  }
+
+  .shadow-target {
+    width: 128px !important;
+    height: 128px !important;
+    font-size: 4.8rem !important;
+  }
+
+  .shadow-options button {
+    padding: 14px !important;
+    border-radius: 8px !important;
+    font-size: 2.8rem !important;
+  }
+
+  .balloon-pop-game {
+    border-radius: 0 !important;
+  }
+}
+
+@media (max-width: 380px), (max-height: 620px) {
+  .game-screen {
+    padding: 8px !important;
+  }
+
+  .game-screen h2,
+  .game-screen h3 {
+    font-size: 1.1rem !important;
+  }
+
+  .memory-board {
+    max-width: min(94vw, 300px) !important;
+    gap: 6px !important;
+  }
+
+  .instrument-card {
+    padding: 12px 8px !important;
+  }
+
+  .instrument-card > div:first-child {
+    font-size: 2.4rem !important;
+  }
+
+  .color-choice {
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  .mix-swatch,
+  .mix-result {
+    width: 62px !important;
+    height: 62px !important;
+  }
+
+  .pet-stage {
+    height: 140px !important;
+  }
+
+  .pet-emoji {
+    font-size: 4.8rem !important;
+  }
+}

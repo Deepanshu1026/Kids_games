@@ -155,7 +155,7 @@ const BlackKeyVideo = ({ src, style }) => {
     }, []);
 
     return (
-        <div style={style}>
+        <div className="floating-helper-video" style={style}>
             <video
                 ref={videoRef}
                 src={src}
@@ -628,7 +628,7 @@ export default function App() {
     return (
         <>
             <FontLink />
-            <div style={{
+            <div className="tinyplay-page" style={{
                 fontFamily: "'Nunito',sans-serif", minHeight: "100vh",
                 background: "var(--cream)", overflowX: "hidden"
             }}>

@@ -38,7 +38,7 @@ const ShadowMatch = () => {
   };
 
   return (
-    <div style={{ 
+    <div className="game-screen shadow-match-game" style={{ 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
@@ -48,7 +48,7 @@ const ShadowMatch = () => {
       padding: '20px',
       textAlign: 'center'
     }}>
-      <div style={{ 
+      <div className="game-score-pill" style={{ 
         position: 'absolute', 
         top: '20px', 
         right: '20px', 
@@ -62,8 +62,8 @@ const ShadowMatch = () => {
         Score: {score}
       </div>
       
-      <div style={{ marginBottom: '50px' }}>
-        <div style={{ 
+      <div className="shadow-target-wrap" style={{ marginBottom: '50px' }}>
+        <div className="shadow-target" style={{ 
           fontSize: '7rem', 
           filter: 'brightness(0)', 
           opacity: 0.15,
@@ -82,7 +82,7 @@ const ShadowMatch = () => {
         <p style={{ marginTop: '20px', fontSize: '1.2rem', fontWeight: '800', color: '#666' }}>Whose shadow is this?</p>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '24px' }}>
+      <div className="shadow-options" style={{ display: 'flex', justifyContent: 'center', gap: '24px' }}>
         {options.map((animal) => (
           <motion.button
             key={animal.id}

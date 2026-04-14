@@ -20,7 +20,7 @@ const PetParade = () => {
 
   if (!pet) {
     return (
-      <div style={{ 
+      <div className="game-screen pet-parade-game pet-select-screen" style={{ 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
@@ -31,7 +31,7 @@ const PetParade = () => {
         textAlign: 'center'
       }}>
         <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: '2.5rem', marginBottom: '30px', color: '#1A1A4E' }}>Choose a friend!</h2>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
+        <div className="pet-options" style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
           {pets.map(p => (
             <motion.div
               key={p.id}
@@ -58,7 +58,7 @@ const PetParade = () => {
   }
 
   return (
-    <div style={{ 
+    <div className="game-screen pet-parade-game pet-care-screen" style={{ 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
@@ -91,7 +91,7 @@ const PetParade = () => {
       </button>
       
       <div style={{ marginBottom: '40px' }}>
-        <div style={{ width: '250px', height: '14px', background: '#f0f0f0', borderRadius: '10px', margin: '0 auto 12px', overflow: 'hidden', border: '2px solid #eee' }}>
+        <div className="happiness-bar" style={{ width: '250px', height: '14px', background: '#f0f0f0', borderRadius: '10px', margin: '0 auto 12px', overflow: 'hidden', border: '2px solid #eee' }}>
           <motion.div 
             animate={{ width: `${happiness}%` }} 
             style={{ height: '100%', background: 'linear-gradient(to right, #4ECDC4, #00B894)', borderRadius: '5px' }} 
@@ -100,7 +100,7 @@ const PetParade = () => {
         <span style={{ fontWeight: '800', color: '#666' }}>Happiness: {happiness}%</span>
       </div>
 
-      <div style={{ position: 'relative', height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+      <div className="pet-stage" style={{ position: 'relative', height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
         <AnimatePresence>
             {action && (
                 <motion.div
@@ -120,6 +120,7 @@ const PetParade = () => {
             rotate: [0, 10, -10, 0],
             y: [0, -10, 0] 
           } : {}}
+          className="pet-emoji"
           style={{ fontSize: '10rem', cursor: 'pointer' }}
           onClick={() => handleAction('love')}
         >
@@ -127,7 +128,7 @@ const PetParade = () => {
         </motion.div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '25px', marginTop: '50px' }}>
+      <div className="pet-actions" style={{ display: 'flex', justifyContent: 'center', gap: '25px', marginTop: '50px' }}>
         <button className="btn" style={{ background: '#FFE66D', padding: '16px 32px' }} onClick={() => handleAction('feed')}>Feed</button>
         <button className="btn" style={{ background: '#4ECDC4', padding: '16px 32px' }} onClick={() => handleAction('wash')}>Wash</button>
         <button className="btn" style={{ background: '#FF6B6B', color: 'white', padding: '16px 32px' }} onClick={() => handleAction('love')}>Love</button>

@@ -101,8 +101,8 @@ const DoodleWorld = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden' }}>
-      <div style={{
+    <div className="game-screen doodle-world-game" style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden' }}>
+      <div className="doodle-toolbar" style={{
         display: 'flex',
         gap: '15px',
         justifyContent: 'center',

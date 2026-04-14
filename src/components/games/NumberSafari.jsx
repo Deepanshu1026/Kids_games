@@ -46,12 +46,12 @@ const NumberSafari = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="game-screen number-safari-game" style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '10px' }}>
         Safari Score: {score}
       </div>
       
-      <div style={{ 
+      <div className="safari-scene" style={{ 
         flex: 1, 
         background: '#E3F2FD', 
         borderRadius: '30px', 
@@ -79,7 +79,7 @@ const NumberSafari = () => {
 
       <div style={{ padding: '20px' }}>
         <h2 style={{ color: '#1976D2' }}>How many animals can you see?</h2>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
+        <div className="number-options" style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
           {options.map((opt) => (
             <motion.button
               key={opt}

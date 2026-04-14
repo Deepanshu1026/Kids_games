@@ -18,7 +18,7 @@ const MusicJungle = () => {
   };
 
   return (
-    <div style={{ 
+    <div className="game-screen music-jungle-game" style={{ 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
@@ -31,7 +31,7 @@ const MusicJungle = () => {
       <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: '1.8rem', color: '#1A1A4E', marginBottom: '10px' }}>Jungle Jam Session! 🎵</h3>
       <p style={{ color: '#666', fontWeight: '700', marginBottom: '40px' }}>Tap an instrument to create music!</p>
       
-      <div style={{ 
+      <div className="music-grid" style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(2, 1fr)', 
         gap: '24px', 
@@ -40,6 +40,7 @@ const MusicJungle = () => {
       }}>
         {instruments.map((inst) => (
           <motion.div
+            className="instrument-card"
             key={inst.id}
             whileHover={{ scale: 1.05, rotate: 2 }}
             whileTap={{ scale: 0.95 }}

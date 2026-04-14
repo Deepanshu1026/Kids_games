@@ -40,7 +40,7 @@ const RocketLaunch = () => {
   }, [launched, power]);
 
   return (
-    <div style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', background: '#0a0a2a', borderRadius: '24px', position: 'relative', overflow: 'hidden' }}>
+    <div className="game-screen rocket-launch-game" style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', background: '#0a0a2a', borderRadius: '24px', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '20px', left: '20px', color: 'white' }}>
         Power: {power}%
       </div>
@@ -68,13 +68,13 @@ const RocketLaunch = () => {
         </motion.div>
       </div>
 
-      <div style={{ padding: '40px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+      <div className="rocket-controls" style={{ padding: '40px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
         {!launched ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ width: '100%', height: '20px', background: '#333', borderRadius: '10px', overflow: 'hidden' }}>
               <div style={{ width: `${power}%`, height: '100%', background: 'linear-gradient(to right, #FF6B6B, #FFE66D)' }} />
             </div>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <div className="rocket-actions" style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <button className="btn" style={{ background: '#4ECDC4' }} onClick={handleCharge}>Charge Up!</button>
               <button className="btn btn-primary" onClick={launch} disabled={power < 20}>LAUNCH!</button>
             </div>
