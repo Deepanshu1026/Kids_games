@@ -738,6 +738,68 @@ p {
   font-size: 1rem;
 }
 
+.theme-song-toggle {
+  position: fixed;
+  right: 24px;
+  bottom: 188px;
+  z-index: 91;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 8px 13px 8px 8px;
+  border: 2px solid rgba(26, 26, 78, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #1a1a4e;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(26, 26, 78, 0.14);
+  backdrop-filter: blur(12px);
+  transition: transform 0.2s cubic-bezier(.34, 1.56, .64, 1), border-color 0.2s ease, background 0.2s ease;
+}
+
+.theme-song-toggle:hover {
+  transform: translateY(-3px) rotate(-1deg);
+  border-color: #ff9a3c;
+}
+
+.theme-song-toggle.is-playing {
+  background: linear-gradient(135deg, #ffd93d, #6bcfb0);
+  border-color: rgba(26, 26, 78, 0.18);
+  animation: musicButtonPulse 1.4s ease-in-out infinite;
+}
+
+.theme-song-icon {
+  display: grid;
+  place-items: center;
+  min-width: 36px;
+  height: 28px;
+  border-radius: 8px;
+  background: #1a1a4e;
+  color: #ffd93d;
+  font-size: 0.68rem;
+}
+
+.theme-song-toggle.is-playing .theme-song-icon {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+@keyframes musicButtonPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 14px 30px rgba(26, 26, 78, 0.14);
+  }
+
+  50% {
+    box-shadow: 0 16px 34px rgba(107, 207, 176, 0.34);
+  }
+}
+
 @keyframes cardHaloSpin {
   from {
     transform: translateX(-50%) rotate(16deg) scale(1.06);
@@ -1000,6 +1062,20 @@ p {
     transform: scale(0.84);
   }
 
+  .theme-song-toggle {
+    right: 12px;
+    bottom: 118px;
+    min-height: 38px;
+    padding: 6px 10px 6px 6px;
+    font-size: 0.72rem;
+  }
+
+  .theme-song-icon {
+    min-width: 32px;
+    height: 25px;
+    font-size: 0.6rem;
+  }
+
   .games-section,
   .testimonials-section {
     padding: 56px 16px !important;
@@ -1087,6 +1163,10 @@ p {
 
   .theme-mascot-character img {
     width: 66px;
+  }
+
+  .theme-song-toggle {
+    bottom: 100px;
   }
 
   .footer-content {
