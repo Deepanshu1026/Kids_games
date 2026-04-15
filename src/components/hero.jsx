@@ -17,7 +17,6 @@ import puzzleImg from '../assets/toy_puzzle_transparent.png'
 import balloonsImg from '../assets/toy_balloons_transparent.png'
 import drumImg from '../assets/toy_drum_transparent.png'
 import paletteImg from '../assets/color_palette_transparent.png'
-import monkeyGif from '../assets/waving_monkey.svg'
 import animatedMonkeyVideo from '../assets/animated_monkey.mp4'
 
 // ── Google Fonts ──────────────────────────────────────────────────────────────
@@ -239,7 +238,7 @@ const Blob = ({ color, size, top, left, delay = 0, opacity = 0.25 }) => (
 
 const Star = ({ top, left, color, size, delay = 0 }) => (
     <div style={{
-        position: "absolute", top, left, fontSize: size, lineHeight: 1,
+        position: "absolute", top, left, fontSize: size, lineHeight: 1, color,
         animation: `starPulse ${2 + delay}s ease-in-out infinite`,
         animationDelay: `${delay}s`, pointerEvents: "none", zIndex: 1,
     }}>⭐</div>
@@ -248,6 +247,25 @@ const Star = ({ top, left, color, size, delay = 0 }) => (
 
 
 // ── Games Data ────────────────────────────────────────────────────────────────
+const ThemeMascot = () => (
+    <div className="theme-mascot" aria-label="TinyPlay jungle art guide">
+        <div className="theme-mascot-bubble">
+            <span>Adventure buddy</span>
+            <strong>Pick a game. I will cheer!</strong>
+        </div>
+        <div className="theme-mascot-character">
+            <span className="theme-mascot-badge">TinyPlay</span>
+            <span className="theme-mascot-orbit orbit-one">123</span>
+            <span className="theme-mascot-orbit orbit-two">♪</span>
+            <span className="theme-mascot-orbit orbit-three">★</span>
+            <span className="theme-mascot-platform" />
+            <img src={monkeyImg} alt="TinyPlay monkey guide" />
+            <span className="theme-mascot-note">♪</span>
+            <span className="theme-mascot-spark">★</span>
+        </div>
+    </div>
+);
+
 const GAMES = [
     {
         id: 1,
@@ -391,66 +409,74 @@ const TAG_COLORS = {
 const GameCard = ({ game, i, onPlay }) => {
     const [hovered, setHovered] = useState(false);
     return (
-        <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+        <div className={`adventure-card ${hovered ? "is-hovered" : ""}`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
             onClick={() => onPlay(game)}
             style={{
-                background: hovered ? game.bg : "#fff",
-                border: `3px solid ${hovered ? game.color : "#f0e8ff"}`,
-                borderRadius: 28, padding: "28px 24px", cursor: "pointer",
-                transform: hovered ? "translateY(-10px) scale(1.03)" : "translateY(0) scale(1)",
+                "--game-color": game.color,
+                "--game-bg": game.bg,
+                "--card-tilt": i % 2 === 0 ? "1.5deg" : "-1.5deg",
+                background: hovered ? `linear-gradient(180deg, ${game.bg} 0%, #ffffff 58%)` : "#fff",
+                border: `2px solid ${hovered ? game.color : "#e8e5f6"}`,
+                borderRadius: 8, padding: "24px 24px 22px", cursor: "pointer",
+                transform: hovered ? "translateY(-12px) rotate(var(--card-tilt))" : "translateY(0) rotate(0)",
                 transition: "all 0.28s cubic-bezier(.34,1.56,.64,1)",
                 animation: `popIn 0.5s ease both`,
                 animationDelay: `${i * 0.08}s`,
-                boxShadow: hovered ? `0 20px 40px ${game.color}33` : "0 4px 18px rgba(0,0,0,0.07)",
+                boxShadow: hovered ? `0 24px 42px ${game.color}2e` : "0 14px 32px rgba(26,26,78,0.08)",
             }}>
-            <div style={{
-                height: 72, display: "flex", alignItems: "flex-end", justifyContent: "center", marginBottom: 16,
-                marginTop: -10, // Bring it up slightly to balance layout
+            <span className="card-shine" />
+            <span className="card-hover-ribbon">Level unlocked</span>
+            <span className="card-pop p1">★</span>
+            <span className="card-pop p2">●</span>
+            <span className="card-pop p3">♪</span>
+            <span className="card-pop p4">✦</span>
+            <div className="adventure-card-art" style={{
                 animation: `float ${3 + i * 0.3}s ease-in-out infinite`
             }}>
                 {game.img ? (
                     <img src={game.img} alt={game.name} style={{
                         maxHeight: "100%", maxWidth: "100%", objectFit: "contain",
                         filter: "drop-shadow(0 12px 18px rgba(0,0,0,0.12))",
-                        transform: "scale(1.2)" // make it pop a little bigger
+                        transform: hovered ? "scale(1.18) rotate(-2deg)" : "scale(1.08)"
                     }} />
                 ) : (
                     <span style={{ fontSize: 52 }}>{game.emoji}</span>
                 )}
             </div>
-            <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 12 }}>
+            <div className="adventure-meta-row" style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 12 }}>
                 <span style={{
-                    background: `${game.color}22`, color: game.color, borderRadius: 999,
+                    background: `${game.color}22`, color: game.color, borderRadius: 8,
                     padding: "3px 12px", fontSize: 12, fontWeight: 800, fontFamily: "'Nunito',sans-serif"
                 }}>
                     {game.tag}
                 </span>
                 <span style={{
-                    background: "#f3f0ff", color: "#7B5EA7", borderRadius: 999,
+                    background: "#f3f0ff", color: "#7B5EA7", borderRadius: 8,
                     padding: "3px 12px", fontSize: 12, fontWeight: 700, fontFamily: "'Nunito',sans-serif"
                 }}>
                     {game.age}
                 </span>
             </div>
-            <h3 style={{
+            <h3 className="adventure-card-title" style={{
                 fontFamily: "'Fredoka One', cursive", fontSize: 22, color: "#1A1A4E",
                 textAlign: "center", marginBottom: 8
             }}>{game.name}</h3>
-            <p style={{
+            <p className="adventure-card-desc" style={{
                 fontFamily: "'Nunito',sans-serif", fontSize: 14, color: "#666", lineHeight: 1.6,
                 textAlign: "center", marginBottom: 16
             }}>{game.desc}</p>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#999", fontFamily: "'Nunito',sans-serif" }}>
+            <div className="adventure-card-footer" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: 12, color: "#777", fontFamily: "'Nunito',sans-serif", fontWeight: 800 }}>
                     👥 {game.players}
                 </span>
                 <button
+                    className="adventure-play-button"
                     onClick={(e) => { e.stopPropagation(); onPlay(game); }}
                     style={{
                         background: game.color, color: "#fff", border: "none",
-                        borderRadius: 999, padding: "8px 20px", fontFamily: "'Fredoka One',cursive",
+                        borderRadius: 8, padding: "10px 20px", fontFamily: "'Fredoka One',cursive",
                         fontSize: 15, cursor: "pointer", transition: "transform 0.15s",
-                        transform: hovered ? "scale(1.08)" : "scale(1)"
+                        transform: hovered ? "scale(1.04)" : "scale(1)"
                     }}>
                     Play Now!
                 </button>
@@ -701,6 +727,7 @@ export default function App() {
                             filter: "drop-shadow(0 15px 30px rgba(0,0,0,0.15))"
                         }}
                     />
+                    <ThemeMascot />
 
                     {/* Content */}
                     <div className="hero-grid" style={{ position: "relative", zIndex: 2 }}>
@@ -821,14 +848,14 @@ export default function App() {
                 <ShowcaseSlider onPlay={openGame} />
 
                 {/* ── GAMES SECTION ── */}
-                <section style={{ padding: "100px 8%", position: "relative" }}>
+                <section className="games-section adventure-section" style={{ padding: "96px 8% 108px", position: "relative" }}>
                     <Blob color="#FFD93D" size="300px" top="-40px" left="80%" opacity={0.12} delay={1} />
                     <Blob color="#6BCFB0" size="250px" top="60%" left="-4%" opacity={0.12} delay={2} />
 
-                    <div style={{ textAlign: "center", marginBottom: 60, position: "relative", zIndex: 1 }}>
-                        <div style={{
+                    <div className="adventure-heading" style={{ textAlign: "center", marginBottom: 44, position: "relative", zIndex: 1 }}>
+                        <div className="adventure-kicker" style={{
                             display: "inline-block", background: "#6BCFB022", border: "2px solid #6BCFB0",
-                            borderRadius: 999, padding: "6px 18px", marginBottom: 18
+                            borderRadius: 8, padding: "6px 18px", marginBottom: 18
                         }}>
                             <span style={{
                                 fontFamily: "'Nunito',sans-serif", fontWeight: 800,
@@ -845,17 +872,18 @@ export default function App() {
                     </div>
 
                     {/* Filter chips */}
-                    <div className="filter-chips" style={{ position: "relative", zIndex: 1 }}>
+                    <div className="filter-chips adventure-filter-bar" style={{ position: "relative", zIndex: 1 }}>
                         {filters.map(f => (
-                            <button key={f} onClick={() => setActiveFilter(f)}
+                            <button key={f} className={activeFilter === f ? "is-active" : ""} onClick={() => setActiveFilter(f)}
                                 style={{
+                                    "--chip-color": TAG_COLORS[f] || "#1A1A4E",
                                     border: activeFilter === f ? "none" : "2px solid #e0d8f0",
                                     background: activeFilter === f ? (TAG_COLORS[f] || "#1A1A4E") : "#fff",
                                     color: activeFilter === f ? "#fff" : "#666",
-                                    borderRadius: 999, padding: "8px 20px",
+                                    borderRadius: 8, padding: "9px 22px",
                                     fontFamily: "'Fredoka One',cursive", fontSize: 15, cursor: "pointer",
                                     transition: "all 0.22s cubic-bezier(.34,1.56,.64,1)",
-                                    transform: activeFilter === f ? "scale(1.08)" : "scale(1)"
+                                    transform: activeFilter === f ? "translateY(-2px)" : "translateY(0)"
                                 }}>
                                 {f}
                             </button>
@@ -863,10 +891,10 @@ export default function App() {
                     </div>
 
                     {/* Cards grid */}
-                    <div style={{
+                    <div className="games-grid adventure-grid" style={{
                         display: "grid",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                        gap: 28, position: "relative", zIndex: 1
+                        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                        gap: 26, position: "relative", zIndex: 1
                     }}>
                         {filtered.map((g, i) => <GameCard key={g.id} game={g} i={i} onPlay={openGame} />)}
                     </div>

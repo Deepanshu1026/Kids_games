@@ -22,20 +22,20 @@ const GameModal = ({ isOpen, onClose, title, children, color }) => {
 
   const contentVariants = {
     hidden: { y: 100, opacity: 0, scale: 0.8 },
-    visible: { 
-      y: 0, 
-      opacity: 1, 
+    visible: {
+      y: 0,
+      opacity: 1,
       scale: 1,
-      transition: { 
-        type: "spring", 
-        damping: 25, 
+      transition: {
+        type: "spring",
+        damping: 25,
         stiffness: 300,
         delay: 0.1
       }
     },
-    exit: { 
-      y: 100, 
-      opacity: 0, 
+    exit: {
+      y: 100,
+      opacity: 0,
       scale: 0.8,
       transition: { duration: 0.3 }
     }
@@ -45,7 +45,7 @@ const GameModal = ({ isOpen, onClose, title, children, color }) => {
     <AnimatePresence>
       {isOpen && (
         <div className="modal-overlay-wrapper">
-          <motion.div 
+          <motion.div
             className="modal-overlay"
             variants={overlayVariants}
             initial="hidden"
@@ -53,8 +53,8 @@ const GameModal = ({ isOpen, onClose, title, children, color }) => {
             exit="hidden"
             onClick={onClose}
           />
-          <motion.div 
-            className="modal-content" 
+          <motion.div
+            className="modal-content"
             variants={contentVariants}
             initial="hidden"
             animate="visible"

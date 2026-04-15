@@ -220,9 +220,17 @@ p {
 
 /* Animations */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .floating {
@@ -230,13 +238,635 @@ p {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .pulse {
   animation: pulse 2s ease-in-out infinite;
+}
+
+.adventure-section {
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, #f7fdff 0%, #ffffff 48%, #fff7fb 100%),
+    repeating-linear-gradient(135deg, rgba(79, 195, 247, 0.08) 0 2px, transparent 2px 18px);
+}
+
+.adventure-section::before,
+.adventure-section::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff6b6b, #ffd93d, #6bcfb0, #4fc3f7, transparent);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.adventure-section::before {
+  top: 42px;
+}
+
+.adventure-section::after {
+  bottom: 42px;
+}
+
+.adventure-heading {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.adventure-kicker {
+  box-shadow: 0 10px 24px rgba(107, 207, 176, 0.18);
+}
+
+.adventure-filter-bar {
+  width: min(100%, 1120px);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  border: 2px solid rgba(26, 26, 78, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 16px 36px rgba(26, 26, 78, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.adventure-filter-bar button {
+  min-height: 38px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.adventure-filter-bar button:hover {
+  border-color: var(--chip-color) !important;
+  color: var(--chip-color) !important;
+  transform: translateY(-2px) !important;
+}
+
+.adventure-filter-bar button.is-active {
+  color: #fff !important;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--chip-color) 34%, transparent);
+}
+
+.adventure-grid {
+  width: min(100%, 1600px);
+  margin: 0 auto;
+}
+
+.adventure-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 388px;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  isolation: isolate;
+}
+
+.adventure-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 8px;
+  background: linear-gradient(90deg, var(--game-color), color-mix(in srgb, var(--game-color) 38%, #ffffff));
+}
+
+.adventure-card::after {
+  content: "";
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  width: 118px;
+  height: 118px;
+  border: 2px dashed color-mix(in srgb, var(--game-color) 36%, transparent);
+  border-radius: 8px;
+  transform: translateX(-50%) rotate(8deg);
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.adventure-card:hover::after {
+  opacity: 0.9;
+  transform: translateX(-50%) rotate(24deg) scale(1.12);
+  animation: cardHaloSpin 1.2s ease-in-out infinite alternate;
+}
+
+.card-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(105deg, transparent 18%, rgba(255, 255, 255, 0.84) 48%, transparent 70%);
+  opacity: 0;
+  transform: translateX(-125%);
+  pointer-events: none;
+}
+
+.adventure-card:hover .card-shine {
+  opacity: 1;
+  animation: cardShine 0.85s ease-out;
+}
+
+.card-hover-ribbon {
+  position: absolute;
+  top: 18px;
+  right: -46px;
+  z-index: 4;
+  min-width: 150px;
+  padding: 7px 16px;
+  background: #1a1a4e;
+  color: #ffd93d;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.72rem;
+  text-align: center;
+  text-transform: uppercase;
+  transform: rotate(35deg) translateY(-18px);
+  opacity: 0;
+  letter-spacing: 0;
+  box-shadow: 0 12px 22px rgba(26, 26, 78, 0.18);
+  pointer-events: none;
+}
+
+.adventure-card:hover .card-hover-ribbon {
+  opacity: 1;
+  transform: rotate(35deg) translateY(0);
+  transition: transform 0.22s cubic-bezier(.34, 1.56, .64, 1), opacity 0.18s ease;
+}
+
+.card-pop {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--game-color);
+  color: #fff;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.9rem;
+  opacity: 0;
+  transform: translateY(18px) scale(0.6);
+  pointer-events: none;
+  box-shadow: 0 9px 16px color-mix(in srgb, var(--game-color) 26%, transparent);
+}
+
+.card-pop.p1 {
+  left: 18px;
+  top: 56px;
+}
+
+.card-pop.p2 {
+  right: 28px;
+  top: 102px;
+  background: #ffd93d;
+  color: #1a1a4e;
+}
+
+.card-pop.p3 {
+  left: 34px;
+  bottom: 96px;
+  background: #6bcfb0;
+}
+
+.card-pop.p4 {
+  right: 38px;
+  bottom: 84px;
+  background: #c77dff;
+}
+
+.adventure-card:hover .card-pop {
+  animation: cardParticle 0.72s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.adventure-card:hover .card-pop.p2 {
+  animation-delay: 0.06s;
+}
+
+.adventure-card:hover .card-pop.p3 {
+  animation-delay: 0.12s;
+}
+
+.adventure-card:hover .card-pop.p4 {
+  animation-delay: 0.18s;
+}
+
+.adventure-card-art {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 18px;
+  position: relative;
+  z-index: 2;
+}
+
+.adventure-card-art img {
+  transition: transform 0.28s cubic-bezier(.34, 1.56, .64, 1), filter 0.28s ease;
+}
+
+.adventure-card:hover .adventure-card-art img {
+  filter: drop-shadow(0 18px 20px rgba(0, 0, 0, 0.14)) saturate(1.08);
+  animation: toyBoing 0.58s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.adventure-card:hover .adventure-card-title {
+  color: var(--game-color) !important;
+  transform: translateY(-2px);
+}
+
+.adventure-card:hover .adventure-play-button {
+  animation: buttonWiggle 0.62s ease-in-out;
+}
+
+.adventure-meta-row span {
+  min-width: 74px;
+  text-align: center;
+}
+
+.adventure-card-title {
+  letter-spacing: 0;
+}
+
+.adventure-card-desc {
+  flex: 1;
+  max-width: 25ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.adventure-card-footer {
+  gap: 14px;
+  margin-top: auto;
+}
+
+.adventure-play-button {
+  min-width: 118px;
+  min-height: 42px;
+  box-shadow: 0 10px 18px color-mix(in srgb, var(--game-color) 28%, transparent);
+}
+
+.adventure-play-button:hover {
+  filter: brightness(1.03);
+}
+
+.theme-mascot {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 90;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 28px rgba(26, 26, 78, 0.2));
+}
+
+.theme-mascot-bubble {
+  width: 178px;
+  padding: 12px 14px;
+  border: 2px solid rgba(26, 26, 78, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 32px rgba(26, 26, 78, 0.12);
+  backdrop-filter: blur(12px);
+  transform-origin: right bottom;
+  animation: mascotBubble 4.5s ease-in-out infinite;
+}
+
+.theme-mascot-bubble::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  bottom: 18px;
+  width: 16px;
+  height: 16px;
+  border-top: 2px solid rgba(26, 26, 78, 0.12);
+  border-right: 2px solid rgba(26, 26, 78, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  transform: rotate(45deg);
+}
+
+.theme-mascot-bubble span,
+.theme-mascot-bubble strong {
+  display: block;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0;
+}
+
+.theme-mascot-bubble span {
+  color: #0f8060;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.theme-mascot-bubble strong {
+  margin-top: 3px;
+  color: #1a1a4e;
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+
+.theme-mascot-character {
+  position: relative;
+  width: 138px;
+  height: 148px;
+  border: 3px solid rgba(255, 217, 61, 0.95);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.75), transparent 24%),
+    linear-gradient(150deg, rgba(255, 217, 61, 0.92), rgba(107, 207, 176, 0.94) 55%, rgba(79, 195, 247, 0.86));
+  overflow: hidden;
+  animation: mascotFloat 3.6s ease-in-out infinite;
+}
+
+.theme-mascot-character::before {
+  content: "";
+  position: absolute;
+  inset: auto -26px -24px -26px;
+  height: 62px;
+  background: linear-gradient(90deg, #ff6b6b, #ff9a3c);
+  border-radius: 50% 50% 0 0;
+  opacity: 0.94;
+}
+
+.theme-mascot-character img {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 116px;
+  max-width: none;
+  transform: translateX(-50%);
+  z-index: 2;
+  animation: mascotWave 2.4s ease-in-out infinite;
+}
+
+.theme-mascot-badge,
+.theme-mascot-note,
+.theme-mascot-spark {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  font-family: 'Fredoka One', cursive;
+  color: #fff;
+  z-index: 2;
+}
+
+.theme-mascot-badge {
+  top: 8px;
+  left: 8px;
+  min-width: 68px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: #1a1a4e;
+  font-size: 0.68rem;
+}
+
+.theme-mascot-note {
+  right: 10px;
+  top: 12px;
+  width: 34px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ff9a3c;
+  font-size: 0;
+  animation: mascotPop 2.8s ease-in-out infinite;
+}
+
+.theme-mascot-note::after {
+  content: "Go!";
+  font-size: 0.72rem;
+}
+
+.theme-mascot-spark {
+  right: 13px;
+  bottom: 12px;
+  color: #1a1a4e;
+  font-size: 0;
+  animation: mascotPop 2.8s ease-in-out 1.1s infinite;
+}
+
+.theme-mascot-spark::after {
+  content: "✦";
+  font-size: 1.25rem;
+}
+
+.theme-mascot-platform {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 10px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(26, 26, 78, 0.2);
+  z-index: 1;
+}
+
+.theme-mascot-orbit {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  font-family: 'Fredoka One', cursive;
+  box-shadow: 0 8px 14px rgba(26, 26, 78, 0.16);
+}
+
+.orbit-one {
+  left: 10px;
+  top: 46px;
+  min-width: 38px;
+  height: 25px;
+  background: #fff;
+  color: #0f8060;
+  font-size: 0.72rem;
+  animation: mascotOrbitPop 3.1s ease-in-out infinite;
+}
+
+.orbit-two {
+  right: 12px;
+  top: 48px;
+  width: 28px;
+  height: 28px;
+  background: #ff6b6b;
+  color: #fff;
+  animation: mascotOrbitPop 3.1s ease-in-out 0.45s infinite;
+}
+
+.orbit-three {
+  right: 26px;
+  bottom: 36px;
+  width: 26px;
+  height: 26px;
+  background: #ffd93d;
+  color: #1a1a4e;
+  animation: mascotOrbitPop 3.1s ease-in-out 0.9s infinite;
+}
+
+.theme-mascot-spark::after {
+  content: "*";
+}
+
+.orbit-two,
+.orbit-three {
+  font-size: 0;
+}
+
+.orbit-two::after {
+  content: "M";
+  font-size: 0.95rem;
+}
+
+.orbit-three::after {
+  content: "*";
+  font-size: 1rem;
+}
+
+@keyframes cardHaloSpin {
+  from {
+    transform: translateX(-50%) rotate(16deg) scale(1.06);
+  }
+
+  to {
+    transform: translateX(-50%) rotate(34deg) scale(1.16);
+  }
+}
+
+@keyframes cardShine {
+  from {
+    transform: translateX(-125%);
+  }
+
+  to {
+    transform: translateX(125%);
+  }
+}
+
+@keyframes cardParticle {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.6) rotate(0deg);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.16) rotate(10deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-28px) scale(0.82) rotate(28deg);
+  }
+}
+
+@keyframes toyBoing {
+  0% {
+    transform: scale(1.08) rotate(0);
+  }
+
+  45% {
+    transform: scale(1.32) rotate(-7deg);
+  }
+
+  70% {
+    transform: scale(1.14) rotate(4deg);
+  }
+
+  100% {
+    transform: scale(1.18) rotate(-2deg);
+  }
+}
+
+@keyframes buttonWiggle {
+
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+
+  25% {
+    rotate: -3deg;
+  }
+
+  75% {
+    rotate: 3deg;
+  }
+}
+
+@keyframes mascotWave {
+
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+
+  50% {
+    transform: translateX(-50%) rotate(-3deg);
+  }
+}
+
+@keyframes mascotOrbitPop {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.12);
+  }
+}
+
+@keyframes mascotFloat {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@keyframes mascotBubble {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-5px) scale(1.02);
+  }
+}
+
+@keyframes mascotPop {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.18);
+  }
 }
 
 @media (max-width: 900px) {
@@ -324,6 +954,52 @@ p {
     z-index: 20 !important;
   }
 
+  .theme-mascot {
+    right: 12px;
+    bottom: 12px;
+    gap: 8px;
+    z-index: 80;
+  }
+
+  .theme-mascot-bubble {
+    width: 136px;
+    padding: 9px 10px;
+  }
+
+  .theme-mascot-bubble span {
+    font-size: 0.66rem;
+  }
+
+  .theme-mascot-bubble strong {
+    font-size: 0.82rem;
+  }
+
+  .theme-mascot-character {
+    width: 86px;
+    height: 96px;
+  }
+
+  .theme-mascot-character img {
+    width: 78px;
+  }
+
+  .theme-mascot-badge {
+    min-width: 52px;
+    height: 22px;
+    font-size: 0.52rem;
+  }
+
+  .theme-mascot-note {
+    width: 24px;
+    height: 24px;
+    right: 7px;
+    top: 9px;
+  }
+
+  .theme-mascot-orbit {
+    transform: scale(0.84);
+  }
+
   .games-section,
   .testimonials-section {
     padding: 56px 16px !important;
@@ -348,9 +1024,20 @@ p {
     transform: none !important;
   }
 
+  .adventure-filter-bar {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 4px;
+  }
+
   .games-grid {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)) !important;
     gap: 18px !important;
+  }
+
+  .adventure-card {
+    min-height: 360px;
   }
 
   .showcase-card {
@@ -387,6 +1074,19 @@ p {
   .floating-helper-video {
     width: 88px !important;
     opacity: 0.85;
+  }
+
+  .theme-mascot-bubble {
+    display: none;
+  }
+
+  .theme-mascot-character {
+    width: 72px;
+    height: 82px;
+  }
+
+  .theme-mascot-character img {
+    width: 66px;
   }
 
   .footer-content {
@@ -465,7 +1165,7 @@ p {
     border-width: 3px !important;
   }
 
-  .instrument-card > div:first-child {
+  .instrument-card>div:first-child {
     font-size: 3rem !important;
   }
 
@@ -502,7 +1202,7 @@ p {
     padding: 10px !important;
   }
 
-  .doodle-toolbar > div:first-child {
+  .doodle-toolbar>div:first-child {
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -540,7 +1240,7 @@ p {
     gap: 12px !important;
   }
 
-  .pet-options > div {
+  .pet-options>div {
     padding: 22px 18px !important;
     border-radius: 8px !important;
   }
@@ -615,7 +1315,8 @@ p {
   }
 }
 
-@media (max-width: 380px), (max-height: 620px) {
+@media (max-width: 380px),
+(max-height: 620px) {
   .game-screen {
     padding: 8px !important;
   }
@@ -634,7 +1335,7 @@ p {
     padding: 12px 8px !important;
   }
 
-  .instrument-card > div:first-child {
+  .instrument-card>div:first-child {
     font-size: 2.4rem !important;
   }
 
