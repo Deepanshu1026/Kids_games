@@ -949,41 +949,41 @@ export default function App() {
                 </section>
 
                 {/* ── TESTIMONIALS ── */}
-                <section style={{ padding: "100px 8%", background: "#F5EDFF" }}>
-                    <div style={{ textAlign: "center", marginBottom: 56 }}>
-                        <h2 style={{
-                            fontFamily: "'Fredoka One',cursive", fontSize: "clamp(28px,3.5vw,46px)",
-                            color: "#1A1A4E"
-                        }}>What Parents Say 💬</h2>
+                <section className="testimonials-section" style={{ position: "relative" }}>
+                    <Blob color="#FFD93D" size="240px" top="18%" left="7%" opacity={0.16} delay={1} />
+                    <Blob color="#6BCFB0" size="210px" top="62%" left="78%" opacity={0.14} delay={2} />
+                    <Blob color="#FF6B6B" size="180px" top="10%" left="84%" opacity={0.12} delay={3} />
+
+                    <div className="testimonial-heading">
+                        <div className="testimonial-kicker">Loved by families</div>
+                        <h2>What Parents Say</h2>
+                        <p>Real little wins from playtime, painting, music, counting, and cozy after-school adventures.</p>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 28 }}>
+                    <div className="testimonial-grid">
                         {[
-                            { q: "My daughter absolutely loves Music Jungle! She's been learning rhythms without even knowing it.", name: "Priya M.", role: "Mom of a 4-year-old", emoji: "👩🏽" },
-                            { q: "Finally an app I trust! No ads, no sneaky purchases. Just pure joy for my son every morning.", name: "Arjun S.", role: "Dad of twins", emoji: "👨🏻" },
-                            { q: "Doodle World improved my child's motor skills in just 2 weeks. Highly recommended!", name: "Fatima R.", role: "Mom of a 3-year-old", emoji: "👩🏾" },
+                            { q: "My daughter absolutely loves Music Jungle! She's been learning rhythms without even knowing it.", name: "Priya M.", role: "Mom of a 4-year-old", emoji: "👩🏽", color: "#FF6B6B", bg: "#fff5f5" },
+                            { q: "Finally an app I trust! No ads, no sneaky purchases. Just pure joy for my son every morning.", name: "Arjun S.", role: "Dad of twins", emoji: "👨🏻", color: "#4FC3F7", bg: "#f0fbff" },
+                            { q: "Doodle World improved my child's motor skills in just 2 weeks. Highly recommended!", name: "Fatima R.", role: "Mom of a 3-year-old", emoji: "👩🏾", color: "#6BCFB0", bg: "#f2fff9" },
                         ].map((t, i) => (
-                            <div key={i} style={{
-                                background: "#fff", borderRadius: 24, padding: "28px 24px",
-                                boxShadow: "0 4px 20px rgba(200,120,255,0.12)",
-                                animation: `popIn 0.5s ease ${i * 0.12}s both`
-                            }}>
-                                <div style={{ fontSize: 36, marginBottom: 16 }}>{"⭐".repeat(5)}</div>
-                                <p style={{ color: "#444", lineHeight: 1.7, fontWeight: 600, marginBottom: 20 }}>
-                                    "{t.q}"
-                                </p>
-                                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                                    <div style={{
-                                        width: 44, height: 44, borderRadius: "50%", background: "#FFD93D",
-                                        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22
-                                    }}>
-                                        {t.emoji}
-                                    </div>
+                            <article
+                                key={i}
+                                className="testimonial-card"
+                                style={{
+                                    "--testimonial-color": t.color,
+                                    "--testimonial-bg": t.bg,
+                                    animation: `popIn 0.5s ease ${i * 0.12}s both`
+                                }}
+                            >
+                                <div className="testimonial-stars" aria-label="5 star rating">{"⭐".repeat(5)}</div>
+                                <p>"{t.q}"</p>
+                                <div className="testimonial-parent">
+                                    <div className="testimonial-avatar">{t.emoji}</div>
                                     <div>
-                                        <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 16, color: "#1A1A4E" }}>{t.name}</div>
-                                        <div style={{ fontSize: 12, color: "#999", fontWeight: 700 }}>{t.role}</div>
+                                        <div className="testimonial-name">{t.name}</div>
+                                        <div className="testimonial-role">{t.role}</div>
                                     </div>
                                 </div>
-                            </div>
+                            </article>
                         ))}
                     </div>
                 </section>
