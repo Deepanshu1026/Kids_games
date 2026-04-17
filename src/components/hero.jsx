@@ -18,6 +18,7 @@ import balloonsImg from '../assets/toy_balloons_transparent.png'
 import drumImg from '../assets/toy_drum_transparent.png'
 import paletteImg from '../assets/color_palette_transparent.png'
 import animatedMonkeyVideo from '../assets/animated_monkey.mp4'
+import themeSong from '../assets/song/bgsong.wav'
 
 // ── Google Fonts ──────────────────────────────────────────────────────────────
 const FontLink = () => (
@@ -631,24 +632,12 @@ const BADGES = [
 ];
 
 // ── Main App ──────────────────────────────────────────────────────────────────
-const THEME_MELODY = [
-    523.25, 659.25, 783.99, 659.25,
-    587.33, 698.46, 880.00, 698.46,
-    659.25, 783.99, 987.77, 783.99,
-    698.46, 659.25, 587.33, 523.25
-];
-
-const THEME_BASS = [261.63, 293.66, 329.63, 349.23];
-
 export default function App() {
     const [activeFilter, setActiveFilter] = useState("All");
     const [activeGame, setActiveGame] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMusicOn, setIsMusicOn] = useState(false);
-    const audioContextRef = useRef(null);
-    const themeTimerRef = useRef(null);
-    const themeStepRef = useRef(0);
-    const themeGainRef = useRef(null);
+    const themeAudioRef = useRef(null);
 
     const filters = ["All", "Creative", "Learning", "Puzzle", "Music", "Mind", "Care", "Skill", "Science"];
     const filtered = activeFilter === "All" ? GAMES : GAMES.filter(g => g.tag === activeFilter);
@@ -663,75 +652,19 @@ export default function App() {
         setActiveGame(null);
     };
 
-    const playTone = (frequency, startTime, duration, type = "sine", volume = 0.18) => {
-        const context = audioContextRef.current;
-        const masterGain = themeGainRef.current;
-        if (!context || !masterGain) return;
-
-        const oscillator = context.createOscillator();
-        const noteGain = context.createGain();
-
-        oscillator.type = type;
-        oscillator.frequency.setValueAtTime(frequency, startTime);
-        noteGain.gain.setValueAtTime(0.0001, startTime);
-        noteGain.gain.exponentialRampToValueAtTime(volume, startTime + 0.025);
-        noteGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-
-        oscillator.connect(noteGain);
-        noteGain.connect(masterGain);
-        oscillator.start(startTime);
-        oscillator.stop(startTime + duration + 0.04);
-    };
-
-    const playThemeStep = () => {
-        const context = audioContextRef.current;
-        if (!context) return;
-
-        const step = themeStepRef.current;
-        const now = context.currentTime;
-        playTone(THEME_MELODY[step % THEME_MELODY.length], now, 0.22, "triangle", 0.16);
-
-        if (step % 4 === 0) {
-            playTone(THEME_BASS[(step / 4) % THEME_BASS.length], now, 0.5, "sine", 0.08);
-        }
-
-        themeStepRef.current = (step + 1) % THEME_MELODY.length;
-    };
-
     const stopThemeSong = () => {
-        if (themeTimerRef.current) {
-            clearInterval(themeTimerRef.current);
-            themeTimerRef.current = null;
-        }
-
-        if (themeGainRef.current) {
-            const context = audioContextRef.current;
-            const now = context?.currentTime || 0;
-            themeGainRef.current.gain.cancelScheduledValues(now);
-            themeGainRef.current.gain.setTargetAtTime(0.0001, now, 0.08);
-        }
+        themeAudioRef.current?.pause();
     };
 
     const startThemeSong = async () => {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-
-        if (!audioContextRef.current) {
-            const context = new AudioContextClass();
-            const masterGain = context.createGain();
-            masterGain.gain.value = 0.0001;
-            masterGain.connect(context.destination);
-            audioContextRef.current = context;
-            themeGainRef.current = masterGain;
+        if (!themeAudioRef.current) {
+            const audio = new Audio(themeSong);
+            audio.loop = true;
+            audio.volume = 0.35;
+            themeAudioRef.current = audio;
         }
 
-        const context = audioContextRef.current;
-        await context.resume();
-        themeGainRef.current.gain.cancelScheduledValues(context.currentTime);
-        themeGainRef.current.gain.setTargetAtTime(0.28, context.currentTime, 0.08);
-
-        playThemeStep();
-        themeTimerRef.current = setInterval(playThemeStep, 280);
+        await themeAudioRef.current.play();
     };
 
     const toggleThemeSong = async () => {
@@ -741,14 +674,17 @@ export default function App() {
             return;
         }
 
-        await startThemeSong();
-        setIsMusicOn(true);
+        try {
+            await startThemeSong();
+            setIsMusicOn(true);
+        } catch {
+            setIsMusicOn(false);
+        }
     };
 
     useEffect(() => {
         return () => {
             stopThemeSong();
-            audioContextRef.current?.close();
         };
     }, []);
 
